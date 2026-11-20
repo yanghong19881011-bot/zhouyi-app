@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="周易随身卦" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#141210" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23141210'/%3E%3Ccircle cx='50' cy='50' r='40' fill='%23141210' stroke='%23c89d54' stroke-width='4'/%3E%3Cpath d='M50,10 A40,40 0 0,1 50,90 A20,20 0 0,1 50,50 A20,20 0 0,0 50,10 Z' fill='%23ebe5dc'/%3E%3Ccircle cx='50' cy='30' r='6' fill='%23141210'/%3E%3Ccircle cx='50' cy='70' r='6' fill='%23ebe5dc'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23141210'/%3E%3Ccircle cx='50' cy='50' r='40' fill='%23141210' stroke='%23c89d54' stroke-width='4'/%3E%3Cpath d='M50,10 A40,40 0 0,1 50,90 A20,20 0 0,1 50,50 A20,20 0 0,0 50,10 Z' fill='%23ebe5dc'/%3E%3Ccircle cx='50' cy='30' r='6' fill='%23141210'/%3E%3Ccircle cx='50' cy='70' r='6' fill='%23ebe5dc'/%3E%3C/svg%3E" />
+  <title>周易八卦 · 离线随身App</title>
+  <style>
+    :root {
+      --bg-primary: #141210;
+      --bg-secondary: #1e1b18;
+      --bg-card: #25211d;
+      --bg-card-hover: #2d2823;
+      --border-gold: #4a3e2d;
+      --gold-light: #e5c384;
+      --gold-main: #c89d54;
+      --gold-dim: #8c6f3d;
+      --cinnabar: #b83b2b;
+      --cinnabar-light: #e05340;
+      --jade: #3c8c6c;
+      --jade-light: #59b38e;
+      --text-main: #ebe5dc;
+      --text-muted: #a69c8e;
+      --text-dim: #6e6559;
+      --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+      --radius: 12px;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      --font-serif: "Songti SC", "SimSun", "STSong", "Noto Serif CJK SC", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(200, 157, 84, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(184, 59, 43, 0.05) 0%, transparent 45%);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    /* Header */
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      background: linear-gradient(145deg, #221e1a, #191613);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .taiji-logo {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      animation: slowSpin 28s linear infinite;
+    }
+
+    @keyframes slowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .offline-badge {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(60, 140, 108, 0.2);
+      border: 1px solid var(--jade);
+      color: var(--jade-light);
+      letter-spacing: 0.5px;
+    }
+
+    .brand-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Nav Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      border: 1px solid #362f28;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover {
+      color: var(--gold-light);
+      border-color: var(--gold-dim);
+      background: var(--bg-card);
+    }
+
+    .nav-tab.active {
+      background: linear-gradient(135deg, #b83b2b, #8f291c);
+      color: #fff;
+      border-color: #d95a49;
+      box-shadow: 0 3px 12px rgba(184, 59, 43, 0.35);
+    }
+
+    /* Layout Panels */
+    .view-panel {
+      display: none;
+    }
+    .view-panel.active {
+      display: block;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 860px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #362f28;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-text, .select-box {
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 1px solid #3d352c;
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-text:focus, .select-box:focus {
+      border-color: var(--gold-main);
+    }
+
+    /* Category Pills */
+    .category-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cat-pill {
+      background: var(--bg-secondary);
+      border: 1px solid #3d352c;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .cat-pill:hover {
+      border-color: var(--gold-dim);
+      color: var(--text-main);
+    }
+
+    .cat-pill.active {
+      background: rgba(200, 157, 84, 0.18);
+      border-color: var(--gold-main);
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    /* Method Switcher */
+    .method-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 580px) {
+      .method-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .method-btn {
+      background: var(--bg-secondary);
+      border: 1px solid #3d352c;
+      color: var(--text-muted);
+      padding: 10px 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .method-btn.active {
+      background: linear-gradient(145deg, #332a20, #272018);
+      border-color: var(--gold-main);
+      color: var(--gold-light);
+      box-shadow: inset 0 0 10px rgba(200, 157, 84, 0.15);
+    }
+
+    /* Coin Toss Stage */
+    .coin-stage {
+      background: var(--bg-secondary);
+      border: 1px dashed #4a3e2d;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .coins-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 14px 0 18px;
+    }
+
+    .copper-coin {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #f0cf8e, #b88736 70%, #7d581c 100%);
+      border: 3px solid #e6c17a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 0 8px rgba(60, 40, 10, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+    }
+
+    .copper-coin.flipping {
+      transform: rotateY(720deg) scale(1.08);
+    }
+
+    .coin-hole {
+      width: 22px;
+      height: 22px;
+      background: var(--bg-secondary);
+      border: 2px solid #8c6320;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coin-label {
+      position: absolute;
+      bottom: -24px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Line stack preview during casting */
+    .casting-lines-box {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 6px;
+      max-width: 300px;
+      margin: 26px auto 10px;
+      padding: 12px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 8px;
+      min-height: 156px;
+      justify-content: flex-start;
+    }
+
+    .cast-line-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .yao-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 140px;
+      justify-content: center;
+    }
+
+    .yao-yang {
+      width: 100%;
+      height: 10px;
+      background: var(--gold-main);
+      border-radius: 2px;
+    }
+
+    .yao-yin {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .yao-yin span {
+      width: 44%;
+      height: 10px;
+      background: var(--gold-main);
+      border-radius: 2px;
+    }
+
+    .yao-moving .yao-yang,
+    .yao-moving .yao-yin span {
+      background: var(--cinnabar-light);
+      box-shadow: 0 0 8px rgba(224, 83, 64, 0.5);
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #c89d54, #9c732f);
+      color: #141210;
+      font-weight: 700;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #2f2923;
+      color: var(--gold-light);
+      border: 1px solid var(--border-gold);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #3b332b;
+      border-color: var(--gold-main);
+    }
+
+    .btn-danger {
+      background: rgba(184, 59, 43, 0.2);
+      color: #f08273;
+      border: 1px solid #8f291c;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    /* Result Display */
+    .fortune-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      letter-spacing: 1px;
+    }
+
+    .fortune-daji {
+      background: rgba(224, 83, 64, 0.2);
+      border: 1px solid var(--cinnabar-light);
+      color: #ff8575;
+    }
+
+    .fortune-zhongji {
+      background: rgba(60, 140, 108, 0.2);
+      border: 1px solid var(--jade-light);
+      color: #7ce0b6;
+    }
+
+    .fortune-xiaoji {
+      background: rgba(200, 157, 84, 0.2);
+      border: 1px solid var(--gold-light);
+      color: var(--gold-light);
+    }
+
+    .fortune-ping {
+      background: rgba(166, 156, 142, 0.18);
+      border: 1px solid var(--text-muted);
+      color: var(--text-main);
+    }
+
+    .fortune-shen {
+      background: rgba(217, 130, 43, 0.2);
+      border: 1px solid #eb9846;
+      color: #ffc285;
+    }
+
+    .hex-comparison {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 580px) {
+      .hex-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hex-mini-card {
+      background: var(--bg-secondary);
+      border: 1px solid #383028;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .hex-mini-tag {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .hex-mini-name {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hex-mini-lines {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 5px;
+      width: 90px;
+      margin: 0 auto 8px;
+    }
+
+    .hex-mini-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .plain-verdict-box {
+      background: linear-gradient(145deg, rgba(200, 157, 84, 0.14), rgba(60, 140, 108, 0.08));
+      border: 1px solid var(--gold-main);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .plain-verdict-title {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .plain-trend-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(229, 195, 132, 0.45);
+      color: var(--gold-light);
+    }
+
+    .plain-verdict-text {
+      font-size: 0.94rem;
+      color: #f5efe6;
+      line-height: 1.65;
+    }
+
+    .plain-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 540px) {
+      .plain-action-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plain-action-pill {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .plain-translate-tag {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--jade-light);
+      background: rgba(60, 140, 108, 0.16);
+      border: 1px solid rgba(89, 179, 142, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-right: 6px;
+    }
+
+    .reading-section {
+      background: var(--bg-secondary);
+      border-left: 3px solid var(--gold-main);
+      padding: 12px 15px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 12px;
+    }
+
+    .reading-section h4 {
+      font-size: 0.9rem;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .reading-section p {
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    /* Dimensions Grid */
+    .dim-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 540px) {
+      .dim-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dim-box {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid #362f28;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .dim-box.highlighted {
+      border-color: var(--gold-main);
+      background: rgba(200, 157, 84, 0.09);
+    }
+
+    .dim-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.84rem;
+      color: var(--gold-light);
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .dim-bar-bg {
+      height: 5px;
+      background: #332c25;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .dim-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold-light));
+      border-radius: 999px;
+    }
+
+    .dim-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Daily Fortune Specific */
+    .almanac-banner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 720px) {
+      .almanac-banner {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .almanac-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .almanac-stat .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .almanac-stat .stat-val {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Dictionary Grid */
+    .dict-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .bagua-filter-bar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .bagua-chip {
+      background: var(--bg-secondary);
+      border: 1px solid #3d352c;
+      color: var(--text-muted);
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .bagua-chip.active {
+      background: var(--gold-main);
+      color: #141210;
+      border-color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    .hex-grid-64 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+      gap: 10px;
+    }
+
+    .hex-tile {
+      background: var(--bg-secondary);
+      border: 1px solid #362f28;
+      border-radius: 8px;
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .hex-tile:hover {
+      border-color: var(--gold-main);
+      transform: translateY(-2px);
+      background: var(--bg-card-hover);
+    }
+
+    .hex-tile-num {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .hex-tile-symbol {
+      font-size: 1.6rem;
+      color: var(--gold-main);
+      margin: 4px 0;
+      line-height: 1.1;
+    }
+
+    .hex-tile-title {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .hex-tile-trigrams {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Modal for Hexagram Detail */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-main);
+      border-radius: var(--radius);
+      max-width: 620px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #2b251f;
+      border: 1px solid var(--gold-main);
+      color: var(--gold-light);
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 0.88rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      z-index: 1000;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .history-item {
+      background: var(--bg-secondary);
+      border: 1px solid #383028;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .wuxing-tag {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.74rem;
+      margin-left: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* Native Mobile App Mode & Bottom Tab Navigation */
+    body.mobile-frame-mode {
+      background: #0b0a09;
+      padding: 18px 0 30px;
+    }
+
+    body.mobile-frame-mode .app-container {
+      max-width: 430px;
+      min-height: 820px;
+      margin: 0 auto;
+      padding: 0 12px 92px;
+      background: var(--bg-primary);
+      border: 6px solid #2b251f;
+      border-radius: 38px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), inset 0 0 0 1px rgba(200, 157, 84, 0.25);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body.mobile-frame-mode .grid-2col {
+      grid-template-columns: 1fr;
+    }
+
+    body.mobile-frame-mode .almanac-banner {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    body.mobile-frame-mode .method-tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    body.mobile-frame-mode .app-header {
+      margin-top: 8px;
+      padding: 12px 14px;
+      border-radius: 16px;
+    }
+
+    body.mobile-frame-mode .brand-title {
+      font-size: 1.15rem;
+      flex-wrap: wrap;
+    }
+
+    body.mobile-frame-mode #mainNav {
+      display: none;
+    }
+
+    /* Mobile Status Bar inside Phone Frame */
+    .app-status-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px 4px;
+      font-size: 0.76rem;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    body.mobile-frame-mode .app-status-bar {
+      display: flex;
+    }
+
+    .app-notch {
+      width: 96px;
+      height: 18px;
+      background: #0b0a09;
+      border-radius: 999px;
+      border: 1px solid #2d261e;
+    }
+
+    /* Top App Mode Toolbar */
+    .app-mode-toolbar {
+      max-width: 1120px;
+      margin: 0 auto 12px;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, rgba(200, 157, 84, 0.14), rgba(30, 27, 24, 0.92));
+      border: 1px solid var(--border-gold);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    body.mobile-frame-mode .app-mode-toolbar {
+      max-width: 430px;
+    }
+
+    .mode-switch-pill {
+      display: inline-flex;
+      background: #161310;
+      border: 1px solid var(--border-gold);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .mode-switch-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .mode-switch-btn.active {
+      background: var(--gold-main);
+      color: #141210;
+    }
+
+    /* Fixed Bottom Tab Bar for Mobile & App Mode */
+    .bottom-app-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(24, 21, 18, 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-gold);
+      display: none;
+      justify-content: space-around;
+      align-items: center;
+      padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+      z-index: 950;
+      box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.6);
+    }
+
+    body.mobile-frame-mode .bottom-app-dock {
+      display: flex;
+      max-width: 430px;
+      margin: 0 auto;
+      border-radius: 0 0 32px 32px;
+      bottom: 30px;
+      border: 1px solid var(--border-gold);
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        padding-bottom: 88px;
+      }
+      #mainNav {
+        display: none;
+      }
+      .bottom-app-dock {
+        display: flex;
+      }
+    }
+
+    .dock-item {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.18s;
+    }
+
+    .dock-item .dock-icon {
+      font-size: 1.2rem;
+      line-height: 1.1;
+    }
+
+    .dock-item.active {
+      color: var(--gold-light);
+      font-weight: 700;
+      background: rgba(200, 157, 84, 0.14);
+    }
+  </style>
+</head>
+<body class="mobile-frame-mode">
+  <!-- App Shell & Offline Install Toolbar -->
+  <div class="app-mode-toolbar">
+    <div class="mode-switch-pill" id="shellModeSwitch">
+      <button type="button" class="mode-switch-btn active" data-shell="mobile">📱 手机 App 沉浸视图</button>
+      <button type="button" class="mode-switch-btn" data-shell="desktop">🖥 宽屏双栏罗盘视图</button>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+      <button type="button" class="btn-secondary" id="btnToggleSound" style="padding:5px 10px;font-size:0.78rem;">🔔 铜钱音效：开启</button>
+      <button type="button" class="btn-secondary" id="btnOpenInstallGuide" style="padding:5px 10px;font-size:0.78rem;">📲 安装到手机桌面</button>
+      <button type="button" class="btn-primary" id="btnQuickDownloadApp" style="padding:5px 12px;font-size:0.78rem;">⬇ 保存离线 App 包</button>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Simulated Native App Status Bar -->
+    <div class="app-status-bar">
+      <span id="statusBarClock">12:00</span>
+      <div class="app-notch"></div>
+      <span>⚡ 离线引擎已就绪</span>
+    </div>
+
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-box">
+        <svg class="taiji-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#141210" stroke="#c89d54" stroke-width="3"/>
+          <path d="M50,2 A48,48 0 0,1 50,98 A24,24 0 0,1 50,50 A24,24 0 0,0 50,2 Z" fill="#ebe5dc"/>
+          <circle cx="50" cy="26" r="7" fill="#141210"/>
+          <circle cx="50" cy="74" r="7" fill="#ebe5dc"/>
+        </svg>
+        <div>
+          <div class="brand-title">
+            周易八卦 · 随身卜筮馆
+            <span class="offline-badge">100% 纯本地离线运行 · 免VPN</span>
+          </div>
+          <div class="brand-sub">内置完整先天八卦、六十四卦象辞与梅花易数推演引擎 · 断网可用 · 本地单文件可保存</div>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" id="mainNav">
+        <button class="nav-tab active" data-view="divine">☯ 诚心起卦测吉凶</button>
+        <button class="nav-tab" data-view="daily">📅 今日运势值日卦</button>
+        <button class="nav-tab" data-view="dict">📖 六十四卦全典</button>
+        <button class="nav-tab" data-view="history">📜 卜卦记录 (<span id="historyCount">0</span>)</button>
+        <button type="button" class="btn-secondary" id="btnDownloadStandalone" style="padding:7px 12px;font-size:0.84rem;">💾 下载单文件离线版 (.html)</button>
+      </nav>
+    </header>
+
+    <!-- VIEW 1: DIVINATION -->
+    <section class="view-panel active" id="view-divine">
+      <div class="grid-2col">
+        <!-- Left Column: Setup & Casting -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">第一步：立意与起卦方式</div>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">心诚则灵 · 无事不占</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="questionInput">所测何事（选填，默念亦可）：</label>
+            <input type="text" id="questionInput" class="input-text" placeholder="例如：近期项目合作能否顺利推进？" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">所问事项类别（决定解卦侧重点）：</label>
+            <div class="category-pills" id="categoryPills">
+              <button type="button" class="cat-pill active" data-cat="general">综合运势</button>
+              <button type="button" class="cat-pill" data-cat="career">事业功名</button>
+              <button type="button" class="cat-pill" data-cat="wealth">财运投资</button>
+              <button type="button" class="cat-pill" data-cat="love">感情姻缘</button>
+              <button type="button" class="cat-pill" data-cat="travel">出行置业</button>
+              <button type="button" class="cat-pill" data-cat="health">身心康泰</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">选择起卦古法：</label>
+            <div class="method-tabs" id="methodTabs">
+              <button type="button" class="method-btn active" data-method="coins">🪙 文王三钱法<br><span style="font-size:0.72rem;color:var(--text-dim);">六爻摇钱·最经典</span></button>
+              <button type="button" class="method-btn" data-method="numbers">🔢 梅花报数法<br><span style="font-size:0.72rem;color:var(--text-dim);">三数起卦·极速断</span></button>
+              <button type="button" class="method-btn" data-method="time">⏳ 时辰灵机法<br><span style="font-size:0.72rem;color:var(--text-dim);">按当下时间起卦</span></button>
+              <button type="button" class="method-btn" data-method="manual">八卦自选点卦<br><span style="font-size:0.72rem;color:var(--text-dim);">上下卦+动爻推演</span></button>
+            </div>
+          </div>
+
+          <!-- Sub-panel A: Three Coins Method -->
+          <div id="panel-method-coins" class="coin-stage">
+            <div style="font-size: 0.86rem; color: var(--text-muted);" id="coinStepPrompt">
+              当前进度：第 <strong style="color:var(--gold-light);" id="currentYaoStep">0</strong> / 6 爻（从初爻往上依次摇卦）
+            </div>
+
+            <div class="coins-row">
+              <div class="copper-coin" id="coin0">
+                <div class="coin-hole"></div>
+                <div class="coin-label" id="coinLabel0">乾隆通宝(字)</div>
+              </div>
+              <div class="copper-coin" id="coin1">
+                <div class="coin-hole"></div>
+                <div class="coin-label" id="coinLabel1">乾隆通宝(字)</div>
+              </div>
+              <div class="copper-coin" id="coin2">
+                <div class="coin-hole"></div>
+                <div class="coin-label" id="coinLabel2">乾隆通宝(字)</div>
+              </div>
+            </div>
+
+            <div class="casting-lines-box" id="castingLinesBox">
+              <!-- Populated dynamically -->
+            </div>
+
+            <div class="btn-row" style="margin-top: 14px;">
+              <button type="button" class="btn-primary" id="btnTossOnce">🪙 摇出一爻</button>
+              <button type="button" class="btn-secondary" id="btnAutoTossAll">⚡ 一键诚心连摇六爻</button>
+              <button type="button" class="btn-secondary" id="btnResetCoins">↺ 重置</button>
+            </div>
+          </div>
+
+          <!-- Sub-panel B: Plum Blossom Numbers -->
+          <div id="panel-method-numbers" class="coin-stage" style="display: none;">
+            <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;">
+              梅花易数规则：心中默念所问之事，随意输入三个正整数（首数定下卦，次数定上卦，末数定动爻）。
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;">
+              <div>
+                <label class="form-label">第一个数 (下卦)</label>
+                <input type="number" id="numInput1" class="input-text" value="18" min="1" />
+              </div>
+              <div>
+                <label class="form-label">第二个数 (上卦)</label>
+                <input type="number" id="numInput2" class="input-text" value="35" min="1" />
+              </div>
+              <div>
+                <label class="form-label">第三个数 (动爻)</label>
+                <input type="number" id="numInput3" class="input-text" value="49" min="1" />
+              </div>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn-primary" id="btnCastNumbers">🔮 按数立即起卦</button>
+              <button type="button" class="btn-secondary" id="btnRandomNumbers">🎲 随机灵数起卦</button>
+            </div>
+          </div>
+
+          <!-- Sub-panel C: Time Method -->
+          <div id="panel-method-time" class="coin-stage" style="display: none;">
+            <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 10px;">
+              以当前设备精确时刻与传统十二时辰数理推算本卦、互卦与动爻，无需联网授时。
+            </p>
+            <div id="liveTimeReadout" style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--gold-light); margin-bottom: 14px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 6px;">
+              加载本地时刻...
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn-primary" id="btnCastTime">⏳ 以此刻机缘起卦</button>
+            </div>
+          </div>
+
+          <!-- Sub-panel D: Manual Bagua Picker -->
+          <div id="panel-method-manual" class="coin-stage" style="display: none;">
+            <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;">
+              自选上卦（外卦）、下卦（内卦）与动爻位置，适合已有实数铜钱成卦或指定八卦组合解卦：
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; text-align: left;">
+              <div>
+                <label class="form-label" for="selUpperBagua">上卦（外卦）</label>
+                <select id="selUpperBagua" class="select-box">
+                  <option value="111">☰ 乾天 (金)</option>
+                  <option value="110">☱ 兑泽 (金)</option>
+                  <option value="101">☲ 离火 (火)</option>
+                  <option value="100">☳ 震雷 (木)</option>
+                  <option value="011">☴ 巽风 (木)</option>
+                  <option value="010">☵ 坎水 (水)</option>
+                  <option value="001">☶ 艮山 (土)</option>
+                  <option value="000" selected>☷ 坤地 (土)</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="selLowerBagua">下卦（内卦）</label>
+                <select id="selLowerBagua" class="select-box">
+                  <option value="111" selected>☰ 乾天 (金)</option>
+                  <option value="110">☱ 兑泽 (金)</option>
+                  <option value="101">☲ 离火 (火)</option>
+                  <option value="100">☳ 震雷 (木)</option>
+                  <option value="011">☴ 巽风 (木)</option>
+                  <option value="010">☵ 坎水 (水)</option>
+                  <option value="001">☶ 艮山 (土)</option>
+                  <option value="000">☷ 坤地 (土)</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="selMovingYao">发动之爻</label>
+                <select id="selMovingYao" class="select-box">
+                  <option value="0">初爻发动 (一爻)</option>
+                  <option value="1">二爻发动</option>
+                  <option value="2">三爻发动</option>
+                  <option value="3">四爻发动</option>
+                  <option value="4" selected>五爻发动 (尊位)</option>
+                  <option value="5">上爻发动 (六爻)</option>
+                  <option value="-1">六爻皆静 (无动爻)</option>
+                </select>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn-primary" id="btnCastManual">☯ 按所选八卦排盘详批</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Detailed Reading Result -->
+        <div class="card" id="readingResultCard">
+          <!-- Populated by renderReadingResult -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: DAILY FORTUNE -->
+    <section class="view-panel" id="view-daily">
+      <div class="almanac-banner" id="dailyAlmanacBanner">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="grid-2col">
+        <div class="card" id="dailyHexCard">
+          <!-- Today's Hexagram & Detailed Fortune -->
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 生肖/生辰专属今日运势加持</div>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">五行生克精准匹配</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="zodiacSelect">选择您的生肖或本命五行以推算今日吉凶方位与宜忌：</label>
+            <select id="zodiacSelect" class="select-box">
+              <option value="子鼠-水">🐭 子鼠（五行属水）</option>
+              <option value="丑牛-土">🐮 丑牛（五行属土）</option>
+              <option value="寅虎-木">🐯 寅虎（五行属木）</option>
+              <option value="卯兔-木">🐰 卯兔（五行属木）</option>
+              <option value="辰龙-土">🐲 辰龙（五行属土）</option>
+              <option value="巳蛇-火">🐍 巳蛇（五行属火）</option>
+              <option value="午马-火">🐴 午马（五行属火）</option>
+              <option value="未羊-土">🐑 未羊（五行属土）</option>
+              <option value="申猴-金">🐵 申猴（五行属金）</option>
+              <option value="酉鸡-金">🐔 酉鸡（五行属金）</option>
+              <option value="戌狗-土">🐶 戌狗（五行属土）</option>
+              <option value="亥猪-水">🐷 亥猪（五行属水）</option>
+            </select>
+          </div>
+          <div id="personalDailyBox">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: 64 HEXAGRAMS DICTIONARY -->
+    <section class="view-panel" id="view-dict">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📖 周易六十四卦全典（离线速查）</div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">点击任意卦象查看卦辞、象曰与吉凶详解</span>
+        </div>
+
+        <div class="dict-controls">
+          <input type="text" id="dictSearchInput" class="input-text" style="max-width: 280px;" placeholder="搜索卦名、自然象、吉凶（如：乾、泰、大吉）..." />
+          <div class="bagua-filter-bar" id="baguaFilterBar">
+            <button type="button" class="bagua-chip active" data-trigram="ALL">全部六十四卦</button>
+            <button type="button" class="bagua-chip" data-trigram="乾">☰ 乾天</button>
+            <button type="button" class="bagua-chip" data-trigram="兑">☱ 兑泽</button>
+            <button type="button" class="bagua-chip" data-trigram="离">☲ 离火</button>
+            <button type="button" class="bagua-chip" data-trigram="震">☳ 震雷</button>
+            <button type="button" class="bagua-chip" data-trigram="巽">☴ 巽风</button>
+            <button type="button" class="bagua-chip" data-trigram="坎">☵ 坎水</button>
+            <button type="button" class="bagua-chip" data-trigram="艮">☶ 艮山</button>
+            <button type="button" class="bagua-chip" data-trigram="坤">☷ 坤地</button>
+          </div>
+        </div>
+
+        <div class="hex-grid-64" id="hexGrid64">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: SAVED HISTORY -->
+    <section class="view-panel" id="view-history">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📜 本地卜卦历史档案</div>
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" id="btnExportHistory">⬇ 导出断卦记录 (.json)</button>
+            <button type="button" class="btn-danger" id="btnClearHistory">🗑 清空记录</button>
+          </div>
+        </div>
+        <div id="historyListContainer">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Bottom Native App Tab Bar -->
+  <nav class="bottom-app-dock" id="bottomAppDock">
+    <button type="button" class="dock-item active" data-view="divine">
+      <span class="dock-icon">☯</span>
+      <span>起卦断事</span>
+    </button>
+    <button type="button" class="dock-item" data-view="daily">
+      <span class="dock-icon">📅</span>
+      <span>今日运势</span>
+    </button>
+    <button type="button" class="dock-item" data-view="dict">
+      <span class="dock-icon">📖</span>
+      <span>六十四卦</span>
+    </button>
+    <button type="button" class="dock-item" data-view="history">
+      <span class="dock-icon">📜</span>
+      <span>卦档(<span id="dockHistoryCount">0</span>)</span>
+    </button>
+  </nav>
+
+  <!-- Hexagram Detail Modal -->
+  <div class="modal-backdrop" id="hexModalBackdrop">
+    <div class="modal-card" id="hexModalContent">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- Install as Native Offline Phone App Guide Modal -->
+  <div class="modal-backdrop" id="installGuideBackdrop">
+    <div class="modal-card">
+      <div class="card-header">
+        <div class="card-title">📲 如何将本程序安装为手机/电脑离线 App</div>
+        <button type="button" class="btn-secondary" id="btnCloseInstallModal" style="padding:4px 10px;">✕ 关闭</button>
+      </div>
+      <div class="reading-section">
+        <h4>第一步：一键保存独立 App 文件</h4>
+        <p>点击顶部「<strong>⬇ 保存离线 App 包</strong>」按钮，将单文件 <code>.html</code> 下载到您的手机或电脑。它已内嵌全部六十四卦辞、梅花易数算法、图标与音效合成器，<strong>完全不联网、不受任何 VPN 影响</strong>。</p>
+      </div>
+      <div class="reading-section" style="border-left-color: var(--jade-light);">
+        <h4>🍎 iOS (iPhone / iPad) 安装到主屏幕步骤</h4>
+        <p>1. 将下载的 <code>.html</code> 文件存入系统「文件 (Files)」App，或用 Safari 打开；<br>
+           2. 点击底部「分享」按钮 ➔ 选择「<strong>添加到主屏幕 (Add to Home Screen)</strong>」；<br>
+           3. 桌面即生成专属「周易随身卦」太极图标，点开即为全屏无地址栏原生 App 体验，飞行模式下照常卜卦。</p>
+      </div>
+      <div class="reading-section" style="border-left-color: var(--cinnabar-light);">
+        <h4>🤖 Android / 鸿蒙 / 桌面端 (Chrome / Edge) 安装步骤</h4>
+        <p>1. 用浏览器打开保存的文件，点击右上角菜单「⋮」；<br>
+           2. 选择「<strong>添加到主屏幕</strong>」或「<strong>安装应用 (Install App)</strong>」即可作为独立桌面 App 随时启动；<br>
+           3. 在手机上摇卦时，还可以直接<strong>晃动手机触发铜钱摇卦</strong>！</p>
+      </div>
+      <div class="btn-row" style="margin-top:14px;justify-content:flex-end;">
+        <button type="button" class="btn-primary" id="btnModalDownloadNow">⬇ 立即下载离线 App 文件 (.html)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="toastMsg">操作成功</div>
+
+  <script>
+    // =========================================================================
+    // 1. COMPLETE AUTHENTIC I CHING & BAGUA OFFLINE ENGINE
+    // =========================================================================
+
+    // Eight Trigrams (Bagua) indexed by 3-bit bottom-to-top binary string (bit0=bottom, bit1=middle, bit2=top)
+    const TRIGRAMS = {
+      "111": { id: 1, name: "乾", nature: "天", symbol: "☰", element: "金", direction: "西北", attr: "刚健中正", family: "父" },
+      "110": { id: 2, name: "兑", nature: "泽", symbol: "☱", element: "金", direction: "正西", attr: "喜悦和顺", family: "少女" },
+      "101": { id: 3, name: "离", nature: "火", symbol: "☲", element: "火", direction: "正南", attr: "光明附丽", family: "中女" },
+      "100": { id: 4, name: "震", nature: "雷", symbol: "☳", element: "木", direction: "正东", attr: "奋发震动", family: "长男" },
+      "011": { id: 5, name: "巽", nature: "风", symbol: "☴", element: "木", direction: "东南", attr: "谦逊深入", family: "长女" },
+      "010": { id: 6, name: "坎", nature: "水", symbol: "☵", element: "水", direction: "正北", attr: "险陷智慧", family: "中男" },
+      "001": { id: 7, name: "艮", nature: "山", symbol: "☶", element: "土", direction: "东北", attr: "静止稳重", family: "少男" },
+      "000": { id: 8, name: "坤", nature: "地", symbol: "☷", element: "土", direction: "西南", attr: "厚德载物", family: "母" }
+    };
+
+    // Map XianTian Bagua Number (1..8) to 3-bit code
+    const XIANTIAN_TO_BITS = {
+      1: "111", // 乾
+      2: "110", // 兑
+      3: "101", // 离
+      4: "100", // 震
+      5: "011", // 巽
+      6: "010", // 坎
+      7: "001", // 艮
+      8: "000"  // 坤
+    };
+
+    // Complete King Wen 64 Hexagrams Table
+    // format: [num, shortName, fullName, lowerBits, upperBits, fortuneLevel, guaci, xiangyue, coreAdvice]
+    const RAW_64_HEXAGRAMS = [
+      [1, "乾", "乾为天", "111", "111", "大吉", "元亨利贞。", "天行健，君子以自强不息。", "阳气鼎盛，刚健进取，百事顺遂，唯戒骄躁盈满。"],
+      [2, "坤", "坤为地", "000", "000", "大吉", "元亨，利牝马之贞。先迷后得主。", "地势坤，君子以厚德载物。", "柔顺包容，厚积薄发，宜顺势辅佐而不宜强行争先。"],
+      [3, "屯", "水雷屯", "100", "010", "平", "元亨利贞，勿用有攸往，利建侯。", "云雷屯，君子以经纶。", "万物始生，初创维艰，宜扎根筑基、广结贤助，忌贸然盲动。"],
+      [4, "蒙", "山水蒙", "010", "001", "小吉", "亨。匪我求童蒙，童蒙求我。", "山下出泉，蒙；君子以果行育德。", "迷雾初开，虚心求教于明师良友，尊道重学则渐入佳境。"],
+      [5, "需", "水天需", "111", "010", "中吉", "有孚，光亨，贞吉。利涉大川。", "云上于天，需；君子以饮食宴乐。", "时机未熟，安心蓄力待机；保持诚信与定力，终可渡越险阻。"],
+      [6, "讼", "天水讼", "010", "111", "慎", "有孚，窒惕，中吉，终凶。", "天与水违行，讼；君子以作事谋始。", "意见相左易生争执，凡事以和为贵、见好就收，切忌意气争讼到底。"],
+      [7, "师", "地水师", "010", "000", "中吉", "贞，丈人吉，无咎。", "地中有水，师；君子以容民畜众。", "统御众人需严明纪律与老成谋略，师出有名则战无不胜。"],
+      [8, "比", "水地比", "000", "010", "大吉", "吉。原筮元永贞，无咎。", "地上有水，比；先王以建万国，亲诸侯。", "亲附贵人，合作共赢，真诚择友守信则四方来助。"],
+      [9, "小畜", "风天小畜", "111", "011", "小吉", "亨。密云不雨，自我西郊。", "风行天上，小畜；君子以懿文德。", "力量尚在积蓄，宜精进细微之德，静待甘霖降临。"],
+      [10, "履", "天泽履", "110", "111", "中吉", "履虎尾，不咥人，亨。", "上天下泽，履；君子以辩上下，定民志。", "处境虽伴风险，但恪守礼法分寸、敬慎行事则化险为夷。"],
+      [11, "泰", "地天泰", "111", "000", "大吉", "小往大来，吉亨。", "天地交，泰；后以财成天地之道。", "天地交泰，上下融通，运势步入顺境，宜把握良机积极拓展。"],
+      [12, "否", "天地否", "000", "111", "慎", "否之匪人，不利君子贞，大往小来。", "天地不交，否；君子以俭德辟难。", "沟通受阻，阴阳不交；宜韬光养晦、守正节俭，静待时局反转。"],
+      [13, "同人", "天火同人", "101", "111", "大吉", "同人于野，亨。利涉大川，利君子贞。", "天与火，同人；君子以类族辨物。", "志同道合，和同于公，跨界协作可成大事。"],
+      [14, "大有", "火天大有", "111", "101", "大吉", "元亨。", "火在天上，大有；君子以遏恶彰显。", "光明普照，丰收富有；谦虚处世、顺天休命则福泽绵长。"],
+      [15, "谦", "地山谦", "001", "000", "大吉", "亨，君子有终。", "地中有山，谦；君子以裒多益寡，称物平施。", "六爻皆吉之卦，内怀高山之才而外示平地之谦，无往不利。"],
+      [16, "豫", "雷地豫", "000", "100", "中吉", "利建侯行师。", "雷出地奋，豫；先王以作乐崇德。", "顺势而动，欢欣鼓舞；居安思危、未雨绸缪则欣悦常在。"],
+      [17, "随", "泽雷随", "100", "110", "中吉", "元亨利贞，无咎。", "泽中有雷，随；君子以向晦入宴息。", "审时度势，随顺正道与时流，通权达变则左右逢源。"],
+      [18, "蛊", "山风蛊", "011", "001", "平", "元亨，利涉大川。先甲三日，后甲三日。", "山下有风，蛊；君子以振民育德。", "积弊亟待革新，果断整顿旧有隐患，推陈出新方见转机。"],
+      [19, "临", "地泽临", "110", "000", "大吉", "元亨利贞。至于八月有凶。", "泽上有地，临；君子以教思无穷，容保民无疆。", "阳气渐长，贵人亲临督导，宜乘势作为并预留远虑。"],
+      [20, "观", "风地观", "000", "011", "中吉", "盥而不荐，有孚颙若。", "风行地上，观；先王以省方观民设教。", "静观大局，审视自我与外境，谋定而后动。"],
+      [21, "噬嗑", "火雷噬嗑", "100", "101", "小吉", "亨。利用狱。", "雷电噬嗑；先王以明罚敕法。", "刚柔并济，果断咬碎阻碍与隔阂，明辨是非则通路自开。"],
+      [22, "贲", "山火贲", "101", "001", "中吉", "亨。小利有攸往。", "山下有火，贲；君子以明庶政，无敢折狱。", "文饰修养，外在形象与内在实质兼顾，文化艺术与公关事吉。"],
+      [23, "剥", "山地剥", "000", "001", "慎", "不利有攸往。", "山附于地，剥；上以厚下安宅。", "阴盛剥阳，外境处于消耗期；宜稳固根基、止步守成，勿轻易涉险。"],
+      [24, "复", "地雷复", "100", "000", "中吉", "亨。出入无疾，朋来无咎。七日来复。", "雷在地中，复；先王以至日闭关。", "一阳来复，生机重现；走出低谷，循序渐进即可焕然一新。"],
+      [25, "无妄", "天雷无妄", "100", "111", "中吉", "元亨利贞。其匪正有眚，不利有攸往。", "天下雷行，物与无妄；先王以茂对时育万物。", "顺乎自然至诚之道，不怀非分妄想，踏实耕耘自有天助。"],
+      [26, "大畜", "山天大畜", "111", "001", "大吉", "利贞，不家食吉，利涉大川。", "天在山中，大畜；君子以多识前言往行，以畜其德。", "厚积学识与资财，大器成于深蓄，施展抱负正当时。"],
+      [27, "颐", "山雷颐", "100", "001", "小吉", "贞吉。观颐，自求口实。", "山下有雷，颐；君子以慎言语，节饮食。", "修身养性，谨言慎食；培养正当专长与生计则安稳吉祥。"],
+      [28, "大过", "泽风大过", "011", "110", "平", "栋桡，利有攸往，亨。", "泽灭木，大过；君子以独立不惧，遁世无闷。", "非常时期需非常之举，负荷过重宜及时加固支撑，稳中求变。"],
+      [29, "坎", "坎为水", "010", "010", "慎", "习坎，有孚，维心亨，行有尚。", "水洊至，习坎；君子以常德行，习教事。", "重重险阻在前，唯有坚守诚信、磨砺真才实学，如水流不息终出险境。"],
+      [30, "离", "离为火", "101", "101", "大吉", "利贞，亨。畜牝牛，吉。", "明两作，离；大人以继明照于四方。", "日月相生，光明绚烂；依附正道与温顺心性，声名与事业皆显耀。"],
+      [31, "咸", "泽山咸", "001", "110", "大吉", "亨，利贞，取女吉。", "山上有泽，咸；君子以虚受人。", "无心之感，灵犀相通；虚怀纳人，合作洽谈与婚恋感情尤为大吉。"],
+      [32, "恒", "雷风恒", "011", "100", "中吉", "亨，无咎，利贞，利有攸往。", "雷风，恒；君子以立不易方。", "持之以恒，久于其道；守持初心与良习，日积月累自成大业。"],
+      [33, "遁", "天山遁", "001", "111", "平", "亨，小利贞。", "天下有山，遁；君子以远小人，不恶而严。", "知进亦知退，在不利局面下主动退避保全实力，实为高明之智。"],
+      [34, "大壮", "雷天大壮", "111", "100", "中吉", "利贞。", "雷在天上，大壮；君子以非礼弗履。", "声势壮盛，气魄宏大；愈是强盛愈要守礼守正，忌恃强妄行。"],
+      [35, "晋", "火地晋", "000", "101", "大吉", "康侯用锡马蕃庶，昼日三接。", "明出地上，晋；君子以自昭明德。", "旭日东升，步步高升；才华得见天日，深获赏识与提携。"],
+      [36, "明夷", "地火明夷", "101", "000", "慎", "利艰贞。", "明入地中，明夷；君子以莅众，用晦而明。", "光明暂隐地下，宜外示柔顺、内怀明智，静待黎明破晓。"],
+      [37, "家人", "风火家人", "101", "011", "大吉", "利女贞。", "风自火出，家人；君子以言有物而行有恒。", "内睦外兴，家道端正；团队或家庭各司其职、言行有信则万事兴旺。"],
+      [38, "睽", "火泽睽", "110", "101", "平", "小事吉。", "上火下泽，睽；君子以同而异。", "存异求同，性情或意见虽有乖违，但在细微共同点上耐心沟通可解。"],
+      [39, "蹇", "水山蹇", "001", "010", "慎", "利西南，不利东北；利见大人，贞吉。", "山上有水，蹇；君子以反身修德。", "前路险阻，不宜硬闯；宜反躬自省、向平易处借力贵人。"],
+      [40, "解", "雷水解", "010", "100", "中吉", "利西南。无所往，其来复吉。有攸往，夙吉。", "雷雨作，解；君子以赦过宥罪。", "春雷化雨，困局消解；宜果断处理遗留问题，宽容释怀，轻装前行。"],
+      [41, "损", "山泽损", "110", "001", "小吉", "有孚，元吉，无咎，可贞，利有攸往。", "山下有泽，损；君子以惩忿窒欲。", "先损后益，克制浮躁与私欲，短期付出与精简反而换来长远收获。"],
+      [42, "益", "风雷益", "100", "011", "大吉", "利有攸往，利涉大川。", "风雷，益；君子以见善则迁，有过则改。", "风助雷势，增益兴旺；主动进取、惠及他人则福禄倍增。"],
+      [43, "夬", "泽天夬", "111", "110", "中吉", "扬于王庭，孚号，有厉，告自邑，不利即戎。", "泽上于天，夬；君子以施禄及下，居德则忌。", "果敢决断，清除隐患；但宜以公开诚信之策化解，忌单凭武力。"],
+      [44, "姤", "天风姤", "011", "111", "平", "女壮，勿用取女。", "天下有风，姤；后以施命诰四方。", "不期而遇，既有意外机缘，亦需防微杜渐、识别潜在不利诱惑。"],
+      [45, "萃", "泽地萃", "000", "110", "大吉", "亨。王假有庙，利见大人，亨，利贞。", "泽上于地，萃；君子以除戎器，戒不虞。", "英才汇聚，人脉与财气聚拢；凝聚共识并做好风险预案则大业可成。"],
+      [46, "升", "地风升", "011", "000", "大吉", "元亨，用见大人，勿恤，南征吉。", "地中生木，升；君子以顺德，积小以高大。", "如木生土中，稳步向上生长；得贵人引荐，拾级而上，前途光明。"],
+      [47, "困", "泽水困", "010", "110", "慎", "亨，贞，大人吉，无咎，有言不信。", "泽无水，困；君子以致命遂志。", "暂处困顿匮乏，多言无益；唯有坚守志节、以内在实力静候转机。"],
+      [48, "井", "水风井", "011", "010", "中吉", "改邑不改井，无丧无得，往来井井。", "木上有水，井；君子以劳民劝相。", "如古井甘泉养人，深耕专业本领、持续疏浚提升，自受众人倚重。"],
+      [49, "革", "泽火革", "101", "110", "中吉", "己日乃孚，元亨利贞，悔亡。", "泽中有火，革；君子以治历明时。", "顺天应时之变革，破旧立新；准备充分后推行改革，必获人心信服。"],
+      [50, "鼎", "火风鼎", "011", "101", "大吉", "元吉，亨。", "木上有火，鼎；君子以正位凝命。", "鼎新稳固，调和鼎鼐；整合各方才智资源，事业迈入鼎盛新局。"],
+      [51, "震", "震为雷", "100", "100", "中吉", "亨。震来虩虩，笑言哑哑。震惊百里，不丧匕鬯。", "洊雷，震；君子以恐惧修省。", "突发变动虽令人警惧，但临危不乱、反躬修省，终能泰然谈笑过关。"],
+      [52, "艮", "艮为山", "001", "001", "平", "艮其背，不获其身，行其庭，不见其人，无咎。", "兼山，艮；君子以思不出其位。", "动静适时，当止则止；摒除杂念、安守本分，内心澄明则无咎。"],
+      [53, "渐", "风山渐", "001", "011", "大吉", "女归吉，利贞。", "山上有木，渐；君子以居贤德善俗。", "鸿雁渐进，按部就班；不急功近利，脚踏实地则事业婚恋皆稳健美满。"],
+      [54, "归妹", "雷泽归妹", "110", "100", "平", "征凶，无攸利。", "泽上有雷，归妹；君子以永终知敝。", "情感或冲动易凌驾理智，合作与婚恋需审视长远名分与次序，忌仓促行事。"],
+      [55, "丰", "雷火丰", "101", "100", "大吉", "亨，王假之，勿忧，宜日中。", "雷电皆至，丰；君子以折狱致刑。", "如日中天，丰硕盛大；趁全盛之时明快决断，并注重长远续航。"],
+      [56, "旅", "火山旅", "001", "101", "小吉", "小亨，旅贞吉。", "山上有火，旅；君子以明慎用刑，而不留狱。", "羁旅变动之象，异地求谋或转换跑道宜谦和谨慎、择良而栖。"],
+      [57, "巽", "巽为风", "011", "011", "中吉", "小亨，利有攸往，利见大人。", "随风，巽；君子以申命行事。", "柔顺谦逊如春风化雨，深入洞察细节、依附良师贵人则顺畅亨通。"],
+      [58, "兑", "兑为泽", "110", "110", "大吉", "亨，利贞。", "丽泽，兑；君子以朋友讲习。", "和悦沟通，喜庆盈门；以诚待人、切磋交流，口碑与收获俱佳。"],
+      [59, "涣", "风水涣", "010", "011", "中吉", "亨。王假有庙，利涉大川，利贞。", "风行水上，涣；先王以享于帝立庙。", "春风化冰，疑虑与僵局涣然冰释；凝聚精神信仰，利于远行突破。"],
+      [60, "节", "水泽节", "110", "010", "中吉", "亨。苦节不可贞。", "泽上有水，节；君子以制数度，议德行。", "凡事贵有节度与制度，收支与言行适度节制则吉，过度苛刻反而不美。"],
+      [61, "中孚", "风泽中孚", "110", "011", "大吉", "豚鱼吉，利涉大川，利贞。", "泽上有风，中孚；君子以议狱缓死。", "至诚感通，信及豚鱼；内心纯正守信，任何合作与难关皆能顺利感化。"],
+      [62, "小过", "雷山小过", "001", "100", "小吉", "亨，利贞。可小事，不可大事。飞鸟遗之音，不宜上，宜下，大吉。", "山上有雷，小过；君子以行过乎恭，丧过乎哀，用过乎俭。", "宜小事不宜大事，姿态宜低不宜高；谦恭节俭、步步求稳则获吉。"],
+      [63, "既济", "水火既济", "101", "010", "中吉", "亨，小利贞，初吉终乱。", "水在火上，既济；君子以思患而预防之。", "功业已成，阴阳正位；越是圆满越要思患预防，防微杜渐以保长久。"],
+      [64, "未济", "火水未济", "010", "101", "小吉", "亨，小狐汔济，濡其尾，无攸利。", "火在水上，未济；君子以慎辨物居方。", "大业尚未竟全功，充满无限生机与可能；审慎收尾、蓄力再发必迎新篇。"]
+    ];
+
+    // Plain-language everyday translations & actionable tips for all 64 hexagrams
+    // format: [plainMeaning, doTip, avoidTip]
+    const PLAIN_64_GUIDE = {
+      1: ["好比艳阳高照、精力充沛，事情正处在上升期，只要敢想敢干，很有机会成大事。", "主动推进核心计划、大胆展示能力。", "切忌骄傲自满、目中无人或透支体力。"],
+      2: ["就像肥沃的大地，踏实厚道、默默耕耘就能收获，当下更适合配合、执行和打基础。", "多听多配合、稳扎稳打做好本职。", "切忌急功近利、强出头或硬抢主导权。"],
+      3: ["万事开头难，就像种子刚破土，眼前有点乱、阻力也多，但其实蕴含着生机。", "先搭好架子、找靠谱的人帮忙。", "切忌盲目乱冲、没准备好就大笔投入。"],
+      4: ["对这件事还不太摸得清门道，就像山里起雾，需要虚心向有经验的人请教。", "多学多问、听取专业人士或前辈建议。", "切忌不懂装懂、固执己见。"],
+      5: ["好比云已经聚在天上但雨还没落下来，时机还没完全成熟，再耐心等一等就会有好消息。", "保持耐心、做好准备、照顾好自己。", "切忌焦躁催促、半途而废。"],
+      6: ["容易和人产生分歧、扯皮或口舌纠纷，就算占理也容易两败俱伤。", "有事好好商量、留有余地、见好就收。", "切忌意气用事、死磕到底或打嘴仗。"],
+      7: ["需要像带兵打仗一样有章法、有纪律，找一位稳重有经验的人牵头就能稳住局面。", "明确分工规则、依靠资深人士。", "切忌群龙无首、各自为政或瞎指挥。"],
+      8: ["人缘和合作运很好，就像水流汇在一起，真诚待人、抱团取暖能成事。", "主动联络贵人、谈合作、多交真诚朋友。", "切忌犹豫太久错过机会或三心二意。"],
+      9: ["目前只是小有收获、力量还在积攒中，就像天上有乌云但还没下大雨，别急着一步登天。", "从小事做起、慢慢积累口碑和实力。", "切忌期望过高、因小失大。"],
+      10: ["好比小心翼翼踩在老虎尾巴附近，虽然环境有风险，但只要你懂规矩、讲分寸，就能平安过关。", "说话办事留分寸、守规矩、态度诚恳。", "切忌得意忘形、越界冒犯关键人物。"],
+      11: ["天地顺畅交融，大好局面来了！付出小努力能换来大回报，沟通顺、贵人多。", "趁着好势头赶紧签约、推进、表白或落实计划。", "切忌安于现状、疏忽大意。"],
+      12: ["上下沟通不畅、各想各的，事情暂时卡住了，硬推只会更累。", "先低调做好自己的事、攒实力、等风向转暖。", "切忌抱怨硬撞、急着做重大决定。"],
+      13: ["志同道合的人走到一起，大家目标一致、互相帮衬，非常适合团队协作或跨界合作。", "公开坦诚沟通、寻找理念相同的伙伴。", "切忌搞小圈子、藏私心。"],
+      14: ["如日中天、收获满满，资源和机会都很充沛，容易名利双收。", "大方分享成果、保持谦虚好口碑。", "切忌炫耀张扬、惹人眼红。"],
+      15: ["非常难得的好卦！你有实力却依然谦虚低调，别人都愿意帮你、让着你，怎么走都顺。", "保持谦和、把功劳分给大家，事自然成。", "切忌摆架子、居功自傲。"],
+      16: ["气氛轻松愉快，顺势而为就能得到大家支持，适合启动新想法或举办活动。", "顺应趋势鼓舞人心、提前做好预案。", "切忌光顾着高兴而忘了潜在风险。"],
+      17: ["讲究随机应变、顺势而为，不要死脑筋，跟着靠谱的节奏和人走反而轻松。", "灵活调整方案、听从合理建议、注意休息。", "切忌死板固执或盲目跟风。"],
+      18: ["以前留下的老问题、坏习惯需要彻底清理了，只要敢于整改，很快就能焕然一新。", "正视积弊、果断修补漏洞、推陈出新。", "切忌拖延掩盖、得过且过。"],
+      19: ["好势头正在靠近，有领导或贵人关注你，事情会越来越明朗。", "抓住当下机会积极表现、同时做好长远打算。", "切忌只顾眼前甜头而忘了未雨绸缪。"],
+      20: ["现在更适合当一个冷静的观察者，多看、多听、摸清别人和局势的真实情况再出手。", "静心观察大局、自我复盘、多看少动。", "切忌没看清形势就仓促表态。"],
+      21: ["中间有块硬骨头卡住了，必须拿出魄力把障碍咬碎、把是非说清楚，路才能通。", "果断解决拖延的问题、明确底线和原则。", "切忌心软姑息或处理过狠伤及无辜。"],
+      22: ["很看重外在形象、包装和表达，把门面和细节打理好，文化、创意、约会类事情特别顺。", "注重仪表礼节、优化方案呈现与沟通方式。", "切忌只顾华丽外表而忽略实际内容。"],
+      23: ["能量正在被消耗，就像大树落叶，外部环境不太有利，先保护好自己现有的成果。", "收缩战线、守住本金和健康、静待回暖。", "切忌盲目扩张、轻易换赛道或冒险投资。"],
+      24: ["低谷已经过去了！新的希望和转机刚刚冒头，虽然还小，但正在一天天变好。", "顺着新苗头慢慢恢复节奏、和靠谱朋友多联系。", "切忌刚见好转就猛踩油门、操之过急。"],
+      25: ["老老实实按正道做事就会有好运，千万别动歪心思、也别做不切实际的幻想。", "脚踏实地、保持真诚本心。", "切忌投机取巧、贪心妄想。"],
+      26: ["你的知识、经验和本钱都攒得差不多了，已经具备做大事的底气，可以准备施展拳脚。", "整理自身资源、勇敢迈出展示实力的一步。", "切忌畏首畏尾、一直光攒不用。"],
+      27: ["提醒你管住嘴、养好身：说话要谨慎别惹祸，饮食作息要规律，先把自己照顾好。", "深耕一门安身立命的手艺、注意养生。", "切忌乱说话得罪人、暴饮暴食或过度焦虑。"],
+      28: ["就像房梁承受的重量快到极限了，当下压力很大，需要赶紧减负或找外援支撑。", "果断舍弃不必要的负担、寻求有力支持。", "切忌死扛到底、不肯变通。"],
+      29: ["眼前确实遇到了一道又一道坎，但不要慌，保持内心的定力和诚意，像水流一样坚持就能走出去。", "冷静拆解难题、靠真本事一步步渡过。", "切忌自乱阵脚、病急乱投医。"],
+      30: ["像太阳和火焰一样明亮显眼，你的才华容易被看见，文书、展示、名声方面的事大吉。", "明确目标、借助好平台发光发热、保持温和心态。", "切忌急躁发火、三分钟热度。"],
+      31: ["心有灵犀、彼此有好感！谈合作、谈恋爱、求婚都非常吉利，只要真诚相待就能打动对方。", "保持空杯心态、真诚倾听、主动释放善意。", "切忌算计太多、心口不一。"],
+      32: ["贵在坚持！这件事不是一蹴而就的，只要认准方向、保持好习惯长期做下去，一定会成功。", "守住初心、按既定节奏坚持推进。", "切忌朝三暮四、频繁换方向。"],
+      33: ["明智地退一步海阔天空。当前局势对自己不利，主动退让、远离消耗你的人，反而是高明的保护。", "悄悄抽身、保存实力、远离是非之人。", "切忌硬碰硬、为了面子死撑。"],
+      34: ["气势很足、能量很强，很多事推起来很有劲，但越顺越要讲规矩、别太冲。", "借着旺势推进正事、时刻提醒自己克制礼貌。", "切忌仗势压人、冲动蛮干。"],
+      35: ["像太阳升起一样步步高升！努力容易被领导或贵人看到，升职、获奖、推进项目都很顺。", "积极汇报展示成果、乘胜追击。", "切忌居功自傲或急着贪更多。"],
+      36: ["现在适合把锋芒藏起来，外面环境复杂，表面随和、心里有数，保护好自己等天亮。", "低调行事、不露锋芒、耐心等待时机。", "切忌硬出头、和强势对手正面冲突。"],
+      37: ["家里和睦、团队齐心，外部事情就容易顺。把身边人的关系理顺，各自管好自己的事就好。", "多关心家人或核心团队、说话算话。", "切忌家里或团队内部互相埋怨。"],
+      38: ["大家想法不太一样、容易有小摩擦，大事暂时难统一，但小事上求同存异还是能办成的。", "先从小共识入手、耐心沟通、别强求完全一致。", "切忌因为意见不合就彻底翻脸。"],
+      39: ["前面路不好走、阻力明显，硬闯会碰壁，先停下来反思调整，找个平缓的方向或请贵人帮忙。", "向内复盘、换一条更稳妥的路、向有经验者求助。", "切忌一意孤行、明知有坑还硬跳。"],
+      40: ["就像春雷下了一场及时雨，之前的卡点、误会和压力正在慢慢解开，可以松一口气了。", "趁着局面松动赶紧处理遗留问题、既往不咎。", "切忌翻旧账、或问题刚解决就彻底躺平。"],
+      41: ["先舍后得！现在可能需要先付出一点时间、精力或金钱，或者做做减法，后面反而赚得更多。", "克制欲望、精简不必要的事、真诚付出。", "切忌斤斤计较、发脾气误事。"],
+      42: ["风助火势、锦上添花！好机会来了，主动去帮别人或积极行动，你自己收获也会翻倍。", "看到好榜样赶紧学、大胆向前迈步、利他共赢。", "切忌犹豫观望、错失良机。"],
+      43: ["到了该做决断的时候了！要把隐藏的小问题、不合适的人或事果断清理掉，但方式要体面温和。", "公开坦诚地把话说开、果断做决定。", "切忌用极端强硬或撕破脸的方式解决。"],
+      44: ["会遇到意想不到的人或机会，可能是惊喜也可能是诱惑，先别急着全盘接受，多留个心眼。", "保持清醒判断、把握有益的偶遇。", "切忌被表面热闹或甜言蜜语冲昏头。"],
+      45: ["人气很旺、资源正在往一起聚！适合聚会、团队扩张、招揽人才或整合资源，记得做好风险备份。", "积极参加社交或团队协作、凝聚大家共识。", "切忌人多手杂却没有防备预案。"],
+      46: ["就像小树苗从土里稳稳往上长，一步一个脚印往上走，有贵人提拔，前途很亮堂。", "脚踏实地积累、主动向有资源的前辈请教。", "切忌想一口吃成胖子、跳过基础步骤。"],
+      47: ["暂时处在有点憋屈、手头紧或别人不理解你的阶段，这时候解释太多没用，咬牙做好自己的事就行。", "少抱怨、多练内功、守住底线等转机。", "切忌到处诉苦、自暴自弃。"],
+      48: ["就像一口源源不断出水的好井，只要你把自己的专业本领打磨好，大家自然都会来找你、离不开你。", "深耕专业技能、持续输出稳定价值。", "切忌这山望着那山高、半途换井挖。"],
+      49: ["到了必须改变的时候！旧办法已经行不通了，做好充分准备后大胆革新，大家会认可你的。", "顺应变化、把方案准备充分后再推行改革。", "切忌没想清楚就乱改一通。"],
+      50: ["稳固立业、大功告成的好兆头！各方资源搭配得很好，适合确立新格局、新合作或晋升核心位置。", "整合不同人的优势、稳重掌舵。", "切忌内部不和或忘了最初的规矩。"],
+      51: ["可能会遇到一件让你吓一跳的突发变化，但其实有惊无险！只要稳住心态不慌乱，反而能迎来笑声。", "临危不乱、冷静复盘、把突发事当成提醒。", "切忌一惊一乍、彻底乱了方寸。"],
+      52: ["该停下来歇一歇、静一静了！别再去胡思乱想或盲目折腾，管好自己分内的事就平安无事。", "及时止步、静心思考、不操多余的心。", "切忌多管闲事、停不下来。"],
+      53: ["就像大雁排队稳稳往前飞，不快但每一步都很扎实，非常适合谈婚论嫁、考证、长期项目。", "按部就班推进、保持耐心和礼数。", "切忌催得太急、破坏原本很好的节奏。"],
+      54: ["小心一时冲动或情感上头做出不理智的决定，合作或感情要看清长远是否合适、名分是否正当。", "冷静评估长远后果、理顺先后次序。", "切忌头脑发热、草率答应或仓促结合。"],
+      55: ["成果丰盛、光芒万丈的时刻到了！趁着状态和资源都在巅峰，抓紧把该做的决定落地。", "乘势而上、果断拍板、同时规划好下一步。", "切忌盛极而忘忧、铺张浪费。"],
+      56: ["像出门在外的旅人，环境比较陌生或变动多，这时候最需要谦虚谨慎、多交善缘、不惹麻烦。", "入乡随俗、低调和气、选靠谱的落脚点。", "切忌嚣张跋扈、到处树敌。"],
+      57: ["像春风一样温和而有穿透力，硬碰硬不如柔和渗透、多听专业意见，顺势而为就会很顺利。", "态度温和但目标坚定、多请教高人。", "切忌优柔寡断、反复无常。"],
+      58: ["喜气洋洋、沟通特别顺畅！适合谈判、聚会、分享好消息、化解矛盾，真诚交流就有好收获。", "多微笑沟通、以诚待人、和朋友交流学习。", "切忌只顾着说漂亮话而忽略原则。"],
+      59: ["就像春风吹散坚冰，之前的僵局、隔阂和烦恼很快就要消散了，非常适合出门走动或打开心结。", "主动破冰沟通、转换环境散心或推进远行。", "切忌继续钻牛角尖、自我封闭。"],
+      60: ["凡事讲究一个「度」字！花钱、熬夜、工作强度都要有节制、定规矩，但也不必对自己太苛刻。", "制定合理预算和作息表、张弛有度。", "切忌毫无节制或极端抠门苦自己。"],
+      61: ["以真心换真心！只要你足够真诚守信，再难搞的人或事也能被打动，合作与感情都会很稳。", "坦诚相待、信守承诺。", "切忌耍小聪明、虚情假意。"],
+      62: ["只适合办小事、做微调，不适合铺大摊子干大事；姿态放低一点、预算省一点，反而平平安安。", "聚焦手头小事、谦恭节俭、脚踏实地。", "切忌好高骛远、野心太大步子迈太开。"],
+      63: ["这件事已经基本成功、达到圆满状态了，但正因为太顺，更要留心后面的小漏洞，防患于未然。", "巩固现有成果、检查细节隐患。", "切忌觉得万事大吉就彻底松懈。"],
+      64: ["事情还没完全收尾，只差临门一脚，千万别在最后关头大意！稳住最后一步，后面还有更大天地。", "认真检查收尾细节、蓄力准备下一阶段。", "切忌还没上岸就提前庆祝、草率收场。"]
+    };
+
+    const UNICODE_HEX_SYMBOLS = [
+      "䷀","䷁","䷂","䷃","䷄","䷅","䷆","䷇","䷈","䷉","䷊","䷋","䷌","䷍","䷎","䷏",
+      "䷐","䷑","䷒","䷓","䷔","䷕","䷖","䷗","䷘","䷙","䷚","䷛","䷜","䷝","䷞","䷟",
+      "䷠","䷡","䷢","䷣","䷤","䷥","䷦","䷧","䷨","䷩","䷪","䷫","䷬","䷭","䷮","䷯",
+      "䷰","䷱","䷲","䷳","䷴","䷵","䷶","䷷","䷸","䷹","䷺","䷻","䷼","䷽","䷾","䷿"
+    ];
+
+    // Build structured lookup maps
+    const HEX_BY_BITS = {};
+    const HEX_LIST = RAW_64_HEXAGRAMS.map((row, idx) => {
+      const [num, shortName, fullName, lowerBits, upperBits, fortuneLevel, guaci, xiangyue, coreAdvice] = row;
+      const bits6 = lowerBits + upperBits; // 6-char string bottom-to-top
+      const lowerTri = TRIGRAMS[lowerBits];
+      const upperTri = TRIGRAMS[upperBits];
+      const obj = {
+        num,
+        shortName,
+        fullName,
+        bits6,
+        lowerBits,
+        upperBits,
+        lowerTri,
+        upperTri,
+        symbol: UNICODE_HEX_SYMBOLS[idx],
+        fortuneLevel,
+        guaci,
+        xiangyue,
+        coreAdvice,
+        plainMeaning: (PLAIN_64_GUIDE[num] && PLAIN_64_GUIDE[num][0]) || coreAdvice,
+        doTip: (PLAIN_64_GUIDE[num] && PLAIN_64_GUIDE[num][1]) || "稳步推进、真诚沟通。",
+        avoidTip: (PLAIN_64_GUIDE[num] && PLAIN_64_GUIDE[num][2]) || "切忌急躁冲动。"
+      };
+      HEX_BY_BITS[bits6] = obj;
+      return obj;
+    });
+
+    // Five Elements (WuXing) interaction helper
+    // returns relation of target relative to Ti (Body)
+    function analyzeTiYongRelation(tiElement, yongElement) {
+      const generates = { "木": "火", "火": "土", "土": "金", "金": "水", "水": "木" };
+      const overcomes = { "木": "土", "土": "水", "水": "火", "火": "金", "金": "木" };
+
+      if (tiElement === yongElement) {
+        return {
+          code: "比和",
+          scoreDelta: +12,
+          title: `体用比和（体${tiElement}·用${yongElement}）`,
+          summary: "主客同气相求，内外顺遂协力，所谋之事易得贵人或同行助力，事半功倍。",
+          plainSummary: "你和外部环境步调一致、气场合拍，容易遇到志同道合的人帮衬，办起事来很顺手。"
+        };
+      }
+      if (generates[yongElement] === tiElement) {
+        return {
+          code: "用生体",
+          scoreDelta: +18,
+          title: `用生体大吉（用${yongElement}生体${tiElement}）`,
+          summary: "外境生扶本我，进益之喜，不劳而获或顺水推舟，求财、求职、合作皆大有收获。",
+          plainSummary: "大环境和机缘都在主动帮你！属于顺水推舟的好局面，不用太费劲就容易看到好结果。"
+        };
+      }
+      if (generates[tiElement] === yongElement) {
+        return {
+          code: "体生用",
+          scoreDelta: -6,
+          title: `体生用泄气（体${tiElement}生用${yongElement}）`,
+          summary: "自身精力与资源向外付出较多，虽有成果但略显操劳耗费，宜量力而行、开源节流。",
+          plainSummary: "这件事需要你多操心、多花时间或金钱去付出，虽然能推进，但别太耗神，注意量力而行。"
+        };
+      }
+      if (overcomes[tiElement] === yongElement) {
+        return {
+          code: "体克用",
+          scoreDelta: +6,
+          title: `体克用可成（体${tiElement}克用${yongElement}）`,
+          summary: "我克外境，事在人为；只要主动攻坚、付出努力，虽历经波折终能掌控全局而获吉。",
+          plainSummary: "主动权在你手里，属于“事在人为”！只要你肯花心思去推进，中间小波折都能被你拿下。"
+        };
+      }
+      return {
+        code: "用克体",
+        scoreDelta: -14,
+        title: `用克体宜慎（用${yongElement}克体${tiElement}）`,
+        summary: "外部阻力或竞争压力较大，不宜盲目硬拼；宜暂避锋芒、借力贵人或调整策略后再动。",
+        plainSummary: "眼下外部阻力或竞争比较大，不太适合硬碰硬，先缓一缓、绕开锋芒或找人帮忙会更稳妥。"
+      };
+    }
+
+    // Generate 6-line contextual Yao advice dynamically based on line position & Yin/Yang
+    function getYaoPositionReading(hex, lineIndex0to5) {
+      const posNames = ["初", "二", "三", "四", "五", "上"];
+      const isYang = hex.bits6[lineIndex0to5] === "1";
+      const yaoTitle = lineIndex0to5 === 0
+        ? `初${isYang ? "九" : "六"}`
+        : lineIndex0to5 === 5
+        ? `上${isYang ? "九" : "六"}`
+        : `${isYang ? "九" : "六"}${posNames[lineIndex0to5]}`;
+
+      const stageInterpretations = [
+        "【刚起步阶段】事情才刚刚冒头，基础还不稳。现在最适合悄悄准备、摸清情况，别急着一下子冲太猛。",
+        "【稳步上升期】状态比较正、实力也慢慢出来了。和身边人沟通很顺，踏实把手头关键事做好就能稳步见效。",
+        "【关键转折点】正处在承上启下的节骨眼上，机会和考验同时出现。多留心细节、稳住心态，别因为大意出错。",
+        "【靠近核心期】已经摸到核心圈层或进入新阶段了，标准也变高了。这时候谦虚一点、多和关键人物沟通最稳妥。",
+        "【高光黄金期】天时地利都在你这边！主导权和好机会都握在手里，只要公平真诚地去办，最容易收获好结果。",
+        "【收尾转折期】事情已经走到高点或快收尾了，接下来可能会迎来新变化。适合见好就收、总结复盘，准备下一阶段。"
+      ];
+
+      return {
+        yaoTitle,
+        text: `${hex.fullName}第${lineIndex0to5 + 1}步（${yaoTitle}）提示：${stageInterpretations[lineIndex0to5]}`
+      };
+    }
+
+    // Compute Mutual Hexagram (Hu Gua 互卦): lower = bits[1..3], upper = bits[2..4]
+    function getMutualHexagram(bits6) {
+      const lowerHu = bits6.slice(1, 4);
+      const upperHu = bits6.slice(2, 5);
+      return HEX_BY_BITS[lowerHu + upperHu] || HEX_LIST[0];
+    }
+
+    // Compute Changed Hexagram (Bian Gua 变卦) given moving line masks (array of booleans length 6)
+    function getChangedHexagram(bits6, movingFlags) {
+      let out = "";
+      for (let i = 0; i < 6; i++) {
+        const bit = bits6[i];
+        if (movingFlags[i]) {
+          out += bit === "1" ? "0" : "1";
+        } else {
+          out += bit;
+        }
+      }
+      return HEX_BY_BITS[out] || HEX_LIST[0];
+    }
+
+    // Compute Dimensional Scores & Advice based on Hexagram + TiYong
+    function computeDimensionalBreakdown(benHex, bianHex, tiYong) {
+      const baseMap = {
+        "大吉": 88,
+        "中吉": 78,
+        "小吉": 70,
+        "平": 62,
+        "慎": 52
+      };
+      const base = (baseMap[benHex.fortuneLevel] || 70) + Math.round(tiYong.scoreDelta * 0.45);
+      const clamp = (n) => Math.max(38, Math.min(98, n));
+
+      // Deterministic hash from hexagram numbers for subtle variation across dimensions
+      const seed = benHex.num * 7 + bianHex.num * 3;
+
+      return {
+        general: {
+          label: "☯ 综合气运",
+          score: clamp(base),
+          advice: benHex.coreAdvice
+        },
+        career: {
+          label: "🏛 事业功名",
+          score: clamp(base + ((seed % 9) - 4)),
+          advice: benHex.fortuneLevel === "大吉" || benHex.fortuneLevel === "中吉"
+            ? `上${benHex.upperTri.name}下${benHex.lowerTri.name}相辅，贵人运显，项目推进与职位晋升皆有良机，宜主动担当。`
+            : `当前宜稳扎稳打、精进内功，理清权责边界后再图扩张，避免多线作战。`
+        },
+        wealth: {
+          label: "💰 财运投资",
+          score: clamp(base + (((seed >> 1) % 11) - 5)),
+          advice: tiYong.code === "用生体" || tiYong.code === "比和"
+            ? "财星生扶体卦，正财稳健、偏财亦有机缘，适合落实既定投资与商务签约。"
+            : "求财宜守成审慎，优先回笼资金、控制非必要开支，忌高风险盲目跟风。"
+        },
+        love: {
+          label: "🌸 感情姻缘",
+          score: clamp(base + (((seed >> 2) % 9) - 3)),
+          advice: benHex.upperTri.family !== benHex.lowerTri.family
+            ? "阴阳有应，真诚倾听彼此心声则感情升温；单身者社交中易遇契合良缘。"
+            : "相处重在包容换位，避免固执己见，多营造温馨仪式感可化解隔阂。"
+        },
+        travel: {
+          label: "🧭 出行置业",
+          score: clamp(base + (((seed >> 3) % 7) - 2)),
+          advice: `吉利方位偏向【${benHex.upperTri.direction}】与【${benHex.lowerTri.direction}】，出行办事提前规划日程则顺畅无阻。`
+        },
+        health: {
+          label: "🌿 身心康泰",
+          score: clamp(base + 3),
+          advice: `本卦五行属${benHex.lowerTri.element}与${benHex.upperTri.element}，宜规律作息、调畅情志，动静结合以固元气。`
+        }
+      };
+    }
+
+    // =========================================================================
+    // 2. APPLICATION STATE & STORAGE
+    // =========================================================================
+
+    const state = {
+      activeView: "divine",
+      selectedCategory: "general",
+      selectedMethod: "coins",
+      // Coin casting lines: each item { value: 6|7|8|9, bit: '0'|'1', moving: bool, title: string }
+      castLines: [],
+      currentResult: null,
+      dictSearch: "",
+      dictTrigramFilter: "ALL",
+      history: []
+    };
+
+    const STORAGE_KEY = "ZHOUYI_OFFLINE_HISTORY_V1";
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            state.history = parsed;
+          }
+        }
+      } catch (e) {
+        state.history = [];
+      }
+      updateHistoryBadge();
+    }
+
+    function saveHistory() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history.slice(0, 50)));
+      } catch (e) {
+        // Fallback if sandbox storage is restricted
+      }
+      updateHistoryBadge();
+    }
+
+    function updateHistoryBadge() {
+      const el = document.getElementById("historyCount");
+      if (el) el.textContent = String(state.history.length);
+      const dockEl = document.getElementById("dockHistoryCount");
+      if (dockEl) dockEl.textContent = String(state.history.length);
+    }
+
+    // Offline Web Audio Synthesizer for Copper Coins & Chime (Zero external audio files)
+    let soundEnabled = true;
+    let audioCtx = null;
+    function playCoinSound(isComplete = false) {
+      if (!soundEnabled) return;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const freqs = isComplete ? [528, 660, 792, 1056] : [1320, 1760, 2240];
+        freqs.forEach((f, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = isComplete ? "sine" : "triangle";
+          osc.frequency.setValueAtTime(f, now + idx * 0.055);
+          gain.gain.setValueAtTime(0.08, now + idx * 0.055);
+          gain.gain.exponentialRampToValueAtTime(0.0008, now + idx * 0.055 + (isComplete ? 0.45 : 0.16));
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.055);
+          osc.stop(now + idx * 0.055 + (isComplete ? 0.46 : 0.17));
+        });
+      } catch (e) {}
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastMsg");
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2400);
+    }
+
+    // =========================================================================
+    // 3. DIVINATION CASTING LOGIC
+    // =========================================================================
+
+    // Cryptographically strong offline random integer [min, max]
+    function randomInt(min, max) {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return min + (arr[0] % (max - min + 1));
+      }
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Toss 3 coins once -> returns { coins: [2|3, 2|3, 2|3], sum: 6|7|8|9, bit: '0'|'1', moving: bool, label: string }
+    // Traditional rule: Word side (字/阳) = 3, Blank/Pattern side (背/阴) = 2
+    // Sum: 6 = 老阴(变阳), 7 = 少阳(不变), 8 = 少阴(不变), 9 = 老阳(变阴)
+    function tossThreeCoinsOnce() {
+      const coins = [
+        randomInt(0, 1) === 1 ? 3 : 2,
+        randomInt(0, 1) === 1 ? 3 : 2,
+        randomInt(0, 1) === 1 ? 3 : 2
+      ];
+      const sum = coins[0] + coins[1] + coins[2];
+      let bit = "1";
+      let moving = false;
+      let typeLabel = "少阳 (单·静爻)";
+      if (sum === 6) {
+        bit = "0";
+        moving = true;
+        typeLabel = "老阴 ✕ (交·动爻变阳)";
+      } else if (sum === 7) {
+        bit = "1";
+        moving = false;
+        typeLabel = "少阳 — (单·阳爻)";
+      } else if (sum === 8) {
+        bit = "0";
+        moving = false;
+        typeLabel = "少阴 - - (拆·阴爻)";
+      } else if (sum === 9) {
+        bit = "1";
+        moving = true;
+        typeLabel = "老阳 ○ (重·动爻变阴)";
+      }
+      return { coins, sum, bit, moving, typeLabel };
+    }
+
+    function animateCoinsDisplay(coins) {
+      for (let i = 0; i < 3; i++) {
+        const coinEl = document.getElementById(`coin${i}`);
+        const labelEl = document.getElementById(`coinLabel${i}`);
+        if (coinEl) {
+          coinEl.classList.remove("flipping");
+          void coinEl.offsetWidth;
+          coinEl.classList.add("flipping");
+        }
+        if (labelEl) {
+          labelEl.textContent = coins[i] === 3 ? "乾隆通宝(字·3)" : "满文宝泉(背·2)";
+        }
+      }
+    }
+
+    function renderCastingProgress() {
+      const stepEl = document.getElementById("currentYaoStep");
+      if (stepEl) stepEl.textContent = String(state.castLines.length);
+
+      const box = document.getElementById("castingLinesBox");
+      if (!box) return;
+
+      const posNames = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
+      if (state.castLines.length === 0) {
+        box.innerHTML = `<div style="margin:auto;color:var(--text-dim);font-size:0.82rem;">点击下方「摇出一爻」或「一键连摇六爻」开始起卦</div>`;
+        return;
+      }
+
+      box.innerHTML = state.castLines.map((line, idx) => {
+        const barHtml = line.bit === "1"
+          ? `<div class="yao-yang"></div>`
+          : `<div class="yao-yin"><span></span><span></span></div>`;
+        return `
+          <div class="cast-line-row ${line.moving ? "yao-moving" : ""}">
+            <span>${posNames[idx]}</span>
+            <div class="yao-bar-wrap">${barHtml}</div>
+            <span style="font-size:0.75rem;color:${line.moving ? "var(--cinnabar-light)" : "var(--text-muted)"};">${line.typeLabel}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function buildReadingFromSixLines(lines, methodTitle) {
+      const bits6 = lines.map(l => l.bit).join("");
+      const movingFlags = lines.map(l => l.moving);
+      const benHex = HEX_BY_BITS[bits6] || HEX_LIST[0];
+      const huHex = getMutualHexagram(bits6);
+      const bianHex = getChangedHexagram(bits6, movingFlags);
+
+      // Determine primary moving line for Ti/Yong analysis (if none, default to fifth line; if multiple, use first moving or upper moving)
+      const movingIndices = [];
+      movingFlags.forEach((m, i) => { if (m) movingIndices.push(i); });
+      const primaryMovingIdx = movingIndices.length > 0 ? movingIndices[movingIndices.length - 1] : 4;
+
+      // Lower trigram is lines 0..2, Upper trigram is lines 3..5
+      // In MeiHua YiShu: Trigram WITHOUT moving line is Ti (Body 本我), Trigram WITH moving line is Yong (Function 外境)
+      const isUpperMoving = primaryMovingIdx >= 3;
+      const tiTri = isUpperMoving ? benHex.lowerTri : benHex.upperTri;
+      const yongTri = isUpperMoving ? benHex.upperTri : benHex.lowerTri;
+      const tiYong = analyzeTiYongRelation(tiTri.element, yongTri.element);
+      const yaoReading = getYaoPositionReading(benHex, primaryMovingIdx);
+      const dimensions = computeDimensionalBreakdown(benHex, bianHex, tiYong);
+
+      const questionText = (document.getElementById("questionInput")?.value || "").trim() || "诚心默念之近期运势与吉凶";
+      const timestamp = new Date().toLocaleString("zh-CN", { hour12: false });
+
+      const result = {
+        id: "div_" + Date.now() + "_" + randomInt(100, 999),
+        timestamp,
+        methodTitle,
+        question: questionText,
+        category: state.selectedCategory,
+        bits6,
+        movingFlags,
+        movingIndices,
+        primaryMovingIdx,
+        benHex,
+        huHex,
+        bianHex,
+        tiTri,
+        yongTri,
+        tiYong,
+        yaoReading,
+        dimensions
+      };
+
+      state.currentResult = result;
+      renderReadingResult(result);
+    }
+
+    // Method 1: Single Toss or Auto 6 Tosses
+    function handleSingleToss() {
+      if (state.castLines.length >= 6) {
+        state.castLines = [];
+      }
+      const toss = tossThreeCoinsOnce();
+      animateCoinsDisplay(toss.coins);
+      state.castLines.push(toss);
+      renderCastingProgress();
+
+      if (state.castLines.length === 6) {
+        playCoinSound(true);
+        buildReadingFromSixLines(state.castLines, "文王三钱六爻法");
+        showToast("六爻已成，卦象推演完毕！");
+        if (document.body.classList.contains("mobile-frame-mode")) {
+          document.getElementById("readingResultCard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      } else {
+        playCoinSound(false);
+      }
+    }
+
+    function handleAutoTossAll() {
+      state.castLines = [];
+      for (let i = 0; i < 6; i++) {
+        state.castLines.push(tossThreeCoinsOnce());
+      }
+      playCoinSound(true);
+      animateCoinsDisplay(state.castLines[5].coins);
+      renderCastingProgress();
+      buildReadingFromSixLines(state.castLines, "文王三钱六爻法");
+      showToast("已诚心连摇六爻，卦象生成！");
+      if (document.body.classList.contains("mobile-frame-mode")) {
+        document.getElementById("readingResultCard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    // Method 2: Plum Blossom 3 Numbers
+    function handleCastByNumbers(n1, n2, n3) {
+      const lowerId = ((Math.abs(n1) - 1) % 8) + 1;
+      const upperId = ((Math.abs(n2) - 1) % 8) + 1;
+      const movingLineIdx = ((Math.abs(n3) - 1) % 6); // 0..5
+
+      const lowerBits = XIANTIAN_TO_BITS[lowerId];
+      const upperBits = XIANTIAN_TO_BITS[upperId];
+      const bits6 = lowerBits + upperBits;
+
+      const lines = [];
+      for (let i = 0; i < 6; i++) {
+        const bit = bits6[i];
+        const moving = i === movingLineIdx;
+        lines.push({
+          bit,
+          moving,
+          typeLabel: moving ? (bit === "1" ? "老阳 ○" : "老阴 ✕") : (bit === "1" ? "少阳 —" : "少阴 - -")
+        });
+      }
+      buildReadingFromSixLines(lines, `梅花易数报数法 (${n1}·${n2}·${n3})`);
+      showToast(`梅花报数 (${n1}, ${n2}, ${n3}) 起卦成功！`);
+    }
+
+    // Method 3: Current Time Method
+    function getShichenInfo(dateObj) {
+      const hour = dateObj.getHours();
+      //的子(23-1)=1, 丑(1-3)=2, 寅(3-5)=3 ...
+      const names = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+      const idx = Math.floor(((hour + 1) % 24) / 2); // 0..11
+      return { index1to12: idx + 1, name: names[idx] + "时" };
+    }
+
+    function updateLiveTimeBanner() {
+      const now = new Date();
+      const sc = getShichenInfo(now);
+      const el = document.getElementById("liveTimeReadout");
+      if (el) {
+        const y = now.getFullYear();
+        const m = now.getMonth() + 1;
+        const d = now.getDate();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        el.textContent = `当前本地时间：${y}年${m}月${d}日 ${hh}:${mm} · 农历时辰【${sc.name}（第${sc.index1to12}时辰）】`;
+      }
+    }
+
+    function handleCastByTime() {
+      const now = new Date();
+      const sc = getShichenInfo(now);
+      const yearNum = now.getFullYear();
+      const monthNum = now.getMonth() + 1;
+      const dayNum = now.getDate();
+      const minuteSeed = now.getMinutes() + 1;
+
+      const upperSum = yearNum + monthNum + dayNum;
+      const lowerSum = upperSum + sc.index1to12 + minuteSeed;
+
+      const upperId = ((upperSum - 1) % 8) + 1;
+      const lowerId = ((lowerSum - 1) % 8) + 1;
+      const movingLineIdx = (lowerSum - 1) % 6;
+
+      const bits6 = XIANTIAN_TO_BITS[lowerId] + XIANTIAN_TO_BITS[upperId];
+      const lines = [];
+      for (let i = 0; i < 6; i++) {
+        const bit = bits6[i];
+        const moving = i === movingLineIdx;
+        lines.push({
+          bit,
+          moving,
+          typeLabel: moving ? (bit === "1" ? "老阳 ○" : "老阴 ✕") : (bit === "1" ? "少阳 —" : "少阴 - -")
+        });
+      }
+      buildReadingFromSixLines(lines, `时辰灵机起卦 (${sc.name})`);
+      showToast("已按当前本地时辰灵机起卦！");
+    }
+
+    // =========================================================================
+    // 4. RENDER READING RESULT & VISUAL HEXAGRAMS
+    // =========================================================================
+
+    function getFortuneBadgeClass(level) {
+      if (level === "大吉") return "fortune-daji";
+      if (level === "中吉") return "fortune-zhongji";
+      if (level === "小吉") return "fortune-xiaoji";
+      if (level === "慎") return "fortune-shen";
+      return "fortune-ping";
+    }
+
+    function renderMiniHexLinesHtml(bits6, movingFlags = []) {
+      let html = "";
+      for (let i = 0; i < 6; i++) {
+        const isYang = bits6[i] === "1";
+        const isMoving = movingFlags[i] === true;
+        html += `
+          <div class="${isMoving ? "yao-moving" : ""}">
+            ${isYang ? `<div class="yao-yang"></div>` : `<div class="yao-yin"><span></span><span></span></div>`}
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    function renderReadingResult(res) {
+      const container = document.getElementById("readingResultCard");
+      if (!container || !res) return;
+
+      const badgeClass = getFortuneBadgeClass(res.benHex.fortuneLevel);
+      const movingDesc = res.movingIndices.length > 0
+        ? `第 ${res.movingIndices.map(i => i + 1).join("、")} 爻发动`
+        : "六爻安静（以本卦卦辞与五爻参断）";
+
+      const dimKeys = ["general", "career", "wealth", "love", "travel", "health"];
+      const dimCardsHtml = dimKeys.map(k => {
+        const d = res.dimensions[k];
+        const isFocus = res.category === k;
+        return `
+          <div class="dim-box ${isFocus ? "highlighted" : ""}">
+            <div class="dim-head">
+              <span>${d.label} ${isFocus ? "★所问焦点" : ""}</span>
+              <span>${d.score}分</span>
+            </div>
+            <div class="dim-bar-bg">
+              <div class="dim-bar-fill" style="width:${d.score}%;"></div>
+            </div>
+            <div class="dim-desc">${d.advice}</div>
+          </div>
+        `;
+      }).join("");
+
+      container.innerHTML = `
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span>第${res.benHex.num}卦 · ${res.benHex.fullName} (${res.benHex.symbol})</span>
+              <span class="fortune-badge ${badgeClass}">${res.benHex.fortuneLevel}</span>
+            </div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">
+              ${res.methodTitle} · ${movingDesc} · ${res.timestamp}
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" id="btnSaveCurrentReading" style="padding:6px 12px;font-size:0.8rem;">💾 保存此卦</button>
+            <button type="button" class="btn-secondary" id="btnCopyCurrentReading" style="padding:6px 12px;font-size:0.8rem;">📋 复制断语</button>
+          </div>
+        </div>
+
+        <div style="font-size:0.88rem;color:var(--gold-light);background:rgba(200,157,84,0.08);border:1px solid #453928;padding:8px 12px;border-radius:6px;margin-bottom:14px;">
+          <strong>所问事项：</strong>${escapeHtml(res.question)}
+        </div>
+
+        <!-- Plain Language Verdict Box (大众化大白话直断) -->
+        ${(() => {
+          const rankMap = { "大吉": 5, "中吉": 4, "小吉": 3, "平": 2, "慎": 1 };
+          const r1 = rankMap[res.benHex.fortuneLevel] || 3;
+          const r2 = rankMap[res.bianHex.fortuneLevel] || 3;
+          const trendLabel = res.benHex.num === res.bianHex.num
+            ? "走势：格局稳定"
+            : r2 > r1
+            ? "走势：越走越顺 ↑"
+            : r2 < r1
+            ? "走势：先稳后防 ↓"
+            : "走势：平稳过渡 →";
+          const focusDim = res.dimensions[res.category] || res.dimensions.general;
+          const plainBen = res.benHex.plainMeaning || (PLAIN_64_GUIDE[res.benHex.num]?.[0]) || res.benHex.coreAdvice;
+          const plainDo = res.benHex.doTip || (PLAIN_64_GUIDE[res.benHex.num]?.[1]) || "稳步推进、多与贵人沟通。";
+          const plainAvoid = res.benHex.avoidTip || (PLAIN_64_GUIDE[res.benHex.num]?.[2]) || "切忌急躁冲动。";
+          const plainTiYong = res.tiYong.plainSummary || res.tiYong.summary;
+          return `
+            <div class="plain-verdict-box">
+              <div class="plain-verdict-title">
+                <span>💡 一眼看懂 · 大白话直断</span>
+                <span class="plain-trend-tag">${trendLabel} · 重点关注【${focusDim.label.replace(/^[^\u4e00-\u9fa5]+/, "")}】</span>
+              </div>
+              <div class="plain-verdict-text">
+                <strong>整体来说：</strong>${plainBen}<br>
+                <span style="color:var(--gold-light);"><strong>外部助力：</strong></span>${plainTiYong}<br>
+                <span style="color:var(--text-muted);font-size:0.87rem;"><strong>针对您问的「${focusDim.label.replace(/^[^\u4e00-\u9fa5]+/, "")}」(${focusDim.score}分)：</strong>${focusDim.advice}</span>
+              </div>
+              <div class="plain-action-row">
+                <div class="plain-action-pill" style="border:1px solid rgba(89,179,142,0.4);">
+                  <strong style="color:var(--jade-light);">✅ 建议这样做：</strong>${plainDo}
+                </div>
+                <div class="plain-action-pill" style="border:1px solid rgba(224,83,64,0.4);">
+                  <strong style="color:var(--cinnabar-light);">⚠️ 尽量避开：</strong>${plainAvoid}
+                </div>
+              </div>
+            </div>
+          `;
+        })()}
+
+        <!-- Three Hexagram Progression: Ben -> Hu -> Bian -->
+        <div class="hex-comparison">
+          <div class="hex-mini-card">
+            <div class="hex-mini-tag">【本卦 · 现在是什么局面】</div>
+            <div class="hex-mini-name">${res.benHex.fullName}</div>
+            <div class="hex-mini-lines">
+              ${renderMiniHexLinesHtml(res.benHex.bits6, res.movingFlags)}
+            </div>
+            <div class="hex-mini-sub">上${res.benHex.upperTri.name}(${res.benHex.upperTri.nature}) 下${res.benHex.lowerTri.name}(${res.benHex.lowerTri.nature})</div>
+          </div>
+
+          <div class="hex-mini-card">
+            <div class="hex-mini-tag">【互卦 · 中间会怎么演变】</div>
+            <div class="hex-mini-name">${res.huHex.fullName}</div>
+            <div class="hex-mini-lines">
+              ${renderMiniHexLinesHtml(res.huHex.bits6)}
+            </div>
+            <div class="hex-mini-sub">上${res.huHex.upperTri.name}(${res.huHex.upperTri.nature}) 下${res.huHex.lowerTri.name}(${res.huHex.lowerTri.nature})</div>
+          </div>
+
+          <div class="hex-mini-card">
+            <div class="hex-mini-tag">【变卦 · 最后大概率结果】</div>
+            <div class="hex-mini-name">${res.bianHex.fullName} (${res.bianHex.fortuneLevel})</div>
+            <div class="hex-mini-lines">
+              ${renderMiniHexLinesHtml(res.bianHex.bits6)}
+            </div>
+            <div class="hex-mini-sub">上${res.bianHex.upperTri.name}(${res.bianHex.upperTri.nature}) 下${res.bianHex.lowerTri.name}(${res.bianHex.lowerTri.nature})</div>
+          </div>
+        </div>
+
+        <!-- Classical Texts & Plain Translations -->
+        <div class="reading-section">
+          <h4><span>📜 卦辞原文与白话直译</span><span>${res.benHex.upperTri.symbol}${res.benHex.lowerTri.symbol}</span></h4>
+          <p><span class="plain-translate-tag">白话</span>${res.benHex.plainMeaning || (PLAIN_64_GUIDE[res.benHex.num]?.[0]) || res.benHex.coreAdvice}</p>
+          <p style="margin-top:6px;font-size:0.84rem;color:var(--text-muted);"><strong>原文参考：</strong>${res.benHex.guaci}（象曰：${res.benHex.xiangyue}）</p>
+        </div>
+
+        <div class="reading-section" style="border-left-color: var(--cinnabar-light);">
+          <h4><span>🔥 关键转折点与最终走向</span><span>结果参考：${res.bianHex.fullName}</span></h4>
+          <p>${res.yaoReading.text}</p>
+          <p style="margin-top:5px;color:var(--text-muted);font-size:0.85rem;">
+            <strong>后续演变：</strong>中间会经过「${res.huHex.fullName}」的过渡，最终落脚到「${res.bianHex.fullName}（${res.bianHex.fortuneLevel}）」——${res.bianHex.plainMeaning || (PLAIN_64_GUIDE[res.bianHex.num]?.[0]) || res.bianHex.coreAdvice}
+          </p>
+        </div>
+
+        <div class="reading-section" style="border-left-color: var(--jade-light);">
+          <h4><span>⚖ 自身与外部环境关系（体用通俗解）</span><span>${res.tiYong.code}</span></h4>
+          <p><span class="plain-translate-tag">通俗讲</span>${res.tiYong.plainSummary || res.tiYong.summary}</p>
+          <p style="margin-top:5px;font-size:0.82rem;color:var(--text-muted);"><strong>专业排盘：</strong>${res.tiYong.title} · 代表自己的【${res.tiTri.name}卦(${res.tiTri.element})】与代表外境的【${res.yongTri.name}卦(${res.yongTri.element})】。</p>
+        </div>
+
+        <!-- Six Dimensions Fortune Breakdown -->
+        <h4 style="font-size:0.92rem;color:var(--gold-light);margin:14px 0 8px;">📊 六维运势吉凶详批（高亮为您所选焦点）</h4>
+        <div class="dim-grid">
+          ${dimCardsHtml}
+        </div>
+      `;
+
+      document.getElementById("btnSaveCurrentReading")?.addEventListener("click", () => {
+        const exists = state.history.some(item => item.id === res.id);
+        if (exists) {
+          showToast("该卦象已在历史档案中！");
+          return;
+        }
+        state.history.unshift(res);
+        saveHistory();
+        renderHistoryList();
+        showToast("已保存至本地卜卦历史档案！");
+      });
+
+      document.getElementById("btnCopyCurrentReading")?.addEventListener("click", () => {
+        const summaryText = [
+          `【周易八卦随身断语】${res.timestamp}`,
+          `所问事项：${res.question}`,
+          `本卦：第${res.benHex.num}卦 ${res.benHex.fullName}（${res.benHex.fortuneLevel}） | 互卦：${res.huHex.fullName} | 变卦：${res.bianHex.fullName}`,
+          `卦辞：${res.benHex.guaci} 象曰：${res.benHex.xiangyue}`,
+          `动爻指引：${res.yaoReading.text}`,
+          `体用生克：${res.tiYong.title}——${res.tiYong.summary}`,
+          `大白话直断：${res.benHex.plainMeaning || res.benHex.coreAdvice}`,
+          `建议这样做：${res.benHex.doTip || "稳步推进"} | 避开：${res.benHex.avoidTip || "急躁冲动"}`
+        ].join("\n");
+        copyTextSafe(summaryText);
+        showToast("断卦结果已复制到剪贴板！");
+      });
+    }
+
+    function copyTextSafe(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // =========================================================================
+    // 5. DAILY FORTUNE & ZODIAC ALMANAC ENGINE
+    // =========================================================================
+
+    const STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+    const BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+    const STEM_ELEMENTS = { "甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水" };
+
+    function renderDailyFortuneView() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = now.getMonth() + 1;
+      const d = now.getDate();
+
+      // Calculate deterministic day offset from reference epoch (1900-01-01 was JiaXu day index 10)
+      const utcDays = Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+      const ganZhiIndex = (utcDays + 40) % 60;
+      const stem = STEMS[ganZhiIndex % 10];
+      const branch = BRANCHES[ganZhiIndex % 12];
+      const dayElement = STEM_ELEMENTS[stem];
+
+      // Today's Ruling Hexagram (值日卦)
+      const hexIdx = (utcDays * 13 + y + m + d) % 64;
+      const dailyHex = HEX_LIST[hexIdx];
+
+      const banner = document.getElementById("dailyAlmanacBanner");
+      if (banner) {
+        banner.innerHTML = `
+          <div class="almanac-stat">
+            <div class="stat-label">今日公历日期</div>
+            <div class="stat-val">${y}年${m}月${d}日</div>
+          </div>
+          <div class="almanac-stat">
+            <div class="stat-label">干支日柱 · 五行</div>
+            <div class="stat-val">${stem}${branch}日 (${dayElement})</div>
+          </div>
+          <div class="almanac-stat">
+            <div class="stat-label">今日值日卦象</div>
+            <div class="stat-val">${dailyHex.symbol} ${dailyHex.fullName}</div>
+          </div>
+          <div class="almanac-stat">
+            <div class="stat-label">今日吉神方位</div>
+            <div class="stat-val">喜神${dailyHex.upperTri.direction} · 财神${dailyHex.lowerTri.direction}</div>
+          </div>
+        `;
+      }
+
+      const dailyHexCard = document.getElementById("dailyHexCard");
+      if (dailyHexCard) {
+        const badgeClass = getFortuneBadgeClass(dailyHex.fortuneLevel);
+        dailyHexCard.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">🌟 今日值日卦：第${dailyHex.num}卦 · ${dailyHex.fullName}</div>
+            <span class="fortune-badge ${badgeClass}">${dailyHex.fortuneLevel}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px;margin-bottom:16px;background:var(--bg-secondary);padding:14px;border-radius:10px;">
+            <div style="width:95px;flex-shrink:0;">
+              <div class="hex-mini-lines">${renderMiniHexLinesHtml(dailyHex.bits6)}</div>
+            </div>
+            <div>
+              <div style="font-size:0.9rem;color:var(--gold-light);font-weight:600;margin-bottom:4px;">
+                上${dailyHex.upperTri.name}(${dailyHex.upperTri.nature}·${dailyHex.upperTri.element}) 下${dailyHex.lowerTri.name}(${dailyHex.lowerTri.nature}·${dailyHex.lowerTri.element})
+              </div>
+              <div style="font-size:0.86rem;color:var(--text-main);"><strong>卦辞：</strong>${dailyHex.guaci}</div>
+              <div style="font-size:0.86rem;color:var(--text-muted);margin-top:2px;"><strong>象曰：</strong>${dailyHex.xiangyue}</div>
+            </div>
+          </div>
+          <div class="reading-section">
+            <h4>今日天机总断</h4>
+            <p>${dailyHex.coreAdvice}</p>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+            <div class="dim-box" style="border-color:var(--jade);">
+              <div class="dim-head" style="color:var(--jade-light);"><span>✅ 今日宜行</span></div>
+              <div class="dim-desc">宜顺应「${dailyHex.upperTri.attr}」之气，推进商务沟通、读书进修、团队协同、规划复盘。</div>
+            </div>
+            <div class="dim-box" style="border-color:var(--cinnabar);">
+              <div class="dim-head" style="color:var(--cinnabar-light);"><span>⚠️ 今日忌行</span></div>
+              <div class="dim-desc">忌意气用事、临阵急躁、未经核实之冲动担保或口舌争执。</div>
+            </div>
+          </div>
+        `;
+      }
+
+      renderPersonalZodiacFortune(dailyHex, dayElement);
+    }
+
+    function renderPersonalZodiacFortune(dailyHex, dayElement) {
+      const selectEl = document.getElementById("zodiacSelect");
+      const box = document.getElementById("personalDailyBox");
+      if (!selectEl || !box) return;
+
+      const [zodiacName, userElement] = selectEl.value.split("-");
+      const rel = analyzeTiYongRelation(userElement, dailyHex.upperTri.element);
+      const dayRel = analyzeTiYongRelation(userElement, dayElement);
+
+      const luckyColors = {
+        "金": "雪山白、流光金、杏色",
+        "木": "竹叶青、翡翠绿、松石色",
+        "水": "玄墨黑、深海蓝、月白",
+        "火": "朱砂红、琥珀橙、紫檀色",
+        "土": "明黄、赭石棕、米驼色"
+      };
+
+      box.innerHTML = `
+        <div class="reading-section" style="border-left-color:var(--gold-light);">
+          <h4><span>${zodiacName}（本命属${userElement}）× 今日卦气（${dailyHex.upperTri.element}）</span><span>${rel.code}</span></h4>
+          <p>${rel.summary}</p>
+        </div>
+        <div class="reading-section" style="border-left-color:var(--jade-light);">
+          <h4><span>日柱五行感应（今日属${dayElement}）</span><span>${dayRel.code}</span></h4>
+          <p>${dayRel.summary}</p>
+        </div>
+        <div class="dim-grid">
+          <div class="dim-box">
+            <div class="dim-head"><span>🎨 今日旺运色彩</span></div>
+            <div class="dim-desc">${luckyColors[userElement] || "金色、玄色"}</div>
+          </div>
+          <div class="dim-box">
+            <div class="dim-head"><span>🧭 今日利好方位</span></div>
+            <div class="dim-desc">${dailyHex.upperTri.direction}、${dailyHex.lowerTri.direction}</div>
+          </div>
+          <div class="dim-box">
+            <div class="dim-head"><span>⏰ 今日吉时推荐</span></div>
+            <div class="dim-desc">辰时 (07:00-09:00)、午时 (11:00-13:00)、申时 (15:00-17:00)</div>
+          </div>
+          <div class="dim-box">
+            <div class="dim-head"><span>🔢 今日幸运灵数</span></div>
+            <div class="dim-desc">${dailyHex.upperTri.id}、${dailyHex.lowerTri.id}、${(dailyHex.num % 9) + 1}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 6. 64 HEXAGRAMS DICTIONARY & DETAIL MODAL
+    // =========================================================================
+
+    function renderDictionaryGrid() {
+      const grid = document.getElementById("hexGrid64");
+      if (!grid) return;
+
+      const kw = state.dictSearch.trim().toLowerCase();
+      const triFilter = state.dictTrigramFilter;
+
+      const filtered = HEX_LIST.filter(h => {
+        if (triFilter !== "ALL" && h.upperTri.name !== triFilter && h.lowerTri.name !== triFilter) {
+          return false;
+        }
+        if (!kw) return true;
+        return (
+          h.fullName.toLowerCase().includes(kw) ||
+          h.shortName.toLowerCase().includes(kw) ||
+          h.fortuneLevel.toLowerCase().includes(kw) ||
+          h.guaci.toLowerCase().includes(kw) ||
+          String(h.num) === kw
+        );
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted);">未找到匹配的卦象，请尝试其他关键词。</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(h => {
+        const badgeClass = getFortuneBadgeClass(h.fortuneLevel);
+        return `
+          <div class="hex-tile" data-hexnum="${h.num}">
+            <div class="hex-tile-num">第 ${h.num} 卦 · <span class="${badgeClass}" style="padding:1px 5px;border-radius:4px;font-size:0.68rem;">${h.fortuneLevel}</span></div>
+            <div class="hex-tile-symbol">${h.symbol}</div>
+            <div class="hex-tile-title">${h.fullName}</div>
+            <div class="hex-tile-trigrams">上${h.upperTri.name}${h.upperTri.symbol} 下${h.lowerTri.name}${h.lowerTri.symbol}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openHexModal(hexNum) {
+      const h = HEX_LIST.find(item => item.num === Number(hexNum));
+      if (!h) return;
+
+      const modalBackdrop = document.getElementById("hexModalBackdrop");
+      const modalContent = document.getElementById("hexModalContent");
+      if (!modalBackdrop || !modalContent) return;
+
+      const badgeClass = getFortuneBadgeClass(h.fortuneLevel);
+      const yaoListHtml = [0, 1, 2, 3, 4, 5].map(idx => {
+        const yr = getYaoPositionReading(h, idx);
+        return `<div style="padding:6px 0;border-bottom:1px dashed #362f28;font-size:0.84rem;"><strong>${yr.yaoTitle}：</strong>${yr.text}</div>`;
+      }).join("");
+
+      modalContent.innerHTML = `
+        <div class="card-header">
+          <div class="card-title">
+            <span style="font-size:1.5rem;">${h.symbol}</span>
+            <span>第${h.num}卦 · ${h.fullName}</span>
+            <span class="fortune-badge ${badgeClass}">${h.fortuneLevel}</span>
+          </div>
+          <button type="button" class="btn-secondary" id="btnCloseModal" style="padding:4px 10px;">✕ 关闭</button>
+        </div>
+
+        <div style="display:flex;gap:18px;align-items:center;background:var(--bg-secondary);padding:14px;border-radius:10px;margin-bottom:14px;">
+          <div style="width:90px;flex-shrink:0;">
+            <div class="hex-mini-lines">${renderMiniHexLinesHtml(h.bits6)}</div>
+          </div>
+          <div style="font-size:0.88rem;">
+            <div><strong>外卦（上卦）：</strong>${h.upperTri.name}为${h.upperTri.nature} (${h.upperTri.symbol}) · 五行属${h.upperTri.element} · 方位${h.upperTri.direction}</div>
+            <div style="margin-top:4px;"><strong>内卦（下卦）：</strong>${h.lowerTri.name}为${h.lowerTri.nature} (${h.lowerTri.symbol}) · 五行属${h.lowerTri.element} · 方位${h.lowerTri.direction}</div>
+          </div>
+        </div>
+
+        <div class="reading-section">
+          <h4>卦辞与大象</h4>
+          <p><strong>卦辞：</strong>${h.guaci}</p>
+          <p style="margin-top:4px;"><strong>象曰：</strong>${h.xiangyue}</p>
+        </div>
+
+        <div class="reading-section" style="border-left-color:var(--jade-light);">
+          <h4>💡 大白话解读与行动建议</h4>
+          <p>${h.plainMeaning || h.coreAdvice}</p>
+          <p style="margin-top:6px;font-size:0.84rem;color:var(--jade-light);"><strong>✅ 宜：</strong>${h.doTip || "稳步推进"}</p>
+          <p style="margin-top:2px;font-size:0.84rem;color:var(--cinnabar-light);"><strong>⚠️ 忌：</strong>${h.avoidTip || "急躁冲动"}</p>
+        </div>
+
+        <div style="margin-top:12px;">
+          <h4 style="font-size:0.9rem;color:var(--gold-light);margin-bottom:6px;">六爻层次推演参考</h4>
+          ${yaoListHtml}
+        </div>
+
+        <div class="btn-row" style="margin-top:16px;justify-content:flex-end;">
+          <button type="button" class="btn-primary" id="btnUseHexInDivine">🔮 以此卦代入解卦台详批</button>
+        </div>
+      `;
+
+      modalBackdrop.classList.add("open");
+
+      document.getElementById("btnCloseModal")?.addEventListener("click", () => {
+        modalBackdrop.classList.remove("open");
+      });
+
+      document.getElementById("btnUseHexInDivine")?.addEventListener("click", () => {
+        modalBackdrop.classList.remove("open");
+        const lines = h.bits6.split("").map((b, i) => ({
+          bit: b,
+          moving: i === 4,
+          typeLabel: i === 4 ? (b === "1" ? "老阳 ○" : "老阴 ✕") : (b === "1" ? "少阳 —" : "少阴 - -")
+        }));
+        buildReadingFromSixLines(lines, `六十四卦典选卦 (${h.fullName})`);
+        switchView("divine");
+        showToast(`已载入「${h.fullName}」详细运势解盘！`);
+      });
+    }
+
+    // =========================================================================
+    // 7. SAVED HISTORY LIST & EXPORT
+    // =========================================================================
+
+    function renderHistoryList() {
+      const container = document.getElementById("historyListContainer");
+      if (!container) return;
+
+      if (state.history.length === 0) {
+        container.innerHTML = `<div style="text-align:center;padding:36px;color:var(--text-muted);">暂无保存的卜卦记录。您可以在起卦后点击「保存此卦」将断语保存在本地。</div>`;
+        return;
+      }
+
+      container.innerHTML = state.history.map((item, idx) => {
+        const badgeClass = getFortuneBadgeClass(item.benHex.fortuneLevel);
+        return `
+          <div class="history-item">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span style="font-family:var(--font-serif);font-size:1.05rem;color:var(--gold-light);font-weight:700;">
+                  ${item.benHex.symbol} ${item.benHex.fullName} ➔ ${item.bianHex.fullName}
+                </span>
+                <span class="fortune-badge ${badgeClass}" style="font-size:0.74rem;padding:2px 8px;">${item.benHex.fortuneLevel}</span>
+                <span style="font-size:0.76rem;color:var(--text-dim);">${item.timestamp}</span>
+              </div>
+              <div style="font-size:0.86rem;color:var(--text-main);">所问：${escapeHtml(item.question)}</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">${item.methodTitle} · ${item.tiYong.title}</div>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn-secondary btn-load-hist" data-idx="${idx}" style="padding:6px 12px;font-size:0.8rem;">查看详批</button>
+              <button type="button" class="btn-danger btn-del-hist" data-idx="${idx}" style="padding:6px 10px;font-size:0.8rem;">删除</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // 8. NAVIGATION & EVENT BINDINGS
+    // =========================================================================
+
+    function switchView(viewName) {
+      state.activeView = viewName;
+      document.querySelectorAll("#mainNav .nav-tab").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-view") === viewName);
+      });
+      document.querySelectorAll("#bottomAppDock .dock-item").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-view") === viewName);
+      });
+      document.querySelectorAll(".view-panel").forEach(panel => {
+        panel.classList.toggle("active", panel.id === `view-${viewName}`);
+      });
+      if (viewName === "daily") {
+        renderDailyFortuneView();
+      } else if (viewName === "dict") {
+        renderDictionaryGrid();
+      } else if (viewName === "history") {
+        renderHistoryList();
+      }
+    }
+
+    function initApp() {
+      loadHistory();
+
+      // Main Navigation
+      document.getElementById("mainNav")?.addEventListener("click", (e) => {
+        const btn = e.target.closest(".nav-tab");
+        if (!btn) return;
+        const view = btn.getAttribute("data-view");
+        if (view) switchView(view);
+      });
+
+      // Category Pills
+      document.getElementById("categoryPills")?.addEventListener("click", (e) => {
+        const pill = e.target.closest(".cat-pill");
+        if (!pill) return;
+        state.selectedCategory = pill.getAttribute("data-cat") || "general";
+        document.querySelectorAll("#categoryPills .cat-pill").forEach(p => {
+          p.classList.toggle("active", p === pill);
+        });
+        if (state.currentResult) {
+          state.currentResult.category = state.selectedCategory;
+          renderReadingResult(state.currentResult);
+        }
+      });
+
+      // Method Switcher
+      document.getElementById("methodTabs")?.addEventListener("click", (e) => {
+        const btn = e.target.closest(".method-btn");
+        if (!btn) return;
+        const method = btn.getAttribute("data-method") || "coins";
+        state.selectedMethod = method;
+        document.querySelectorAll("#methodTabs .method-btn").forEach(b => {
+          b.classList.toggle("active", b === btn);
+        });
+        document.getElementById("panel-method-coins").style.display = method === "coins" ? "block" : "none";
+        document.getElementById("panel-method-numbers").style.display = method === "numbers" ? "block" : "none";
+        document.getElementById("panel-method-time").style.display = method === "time" ? "block" : "none";
+        document.getElementById("panel-method-manual").style.display = method === "manual" ? "block" : "none";
+        if (method === "time") updateLiveTimeBanner();
+      });
+
+      // Coin buttons
+      document.getElementById("btnTossOnce")?.addEventListener("click", handleSingleToss);
+      document.getElementById("btnAutoTossAll")?.addEventListener("click", handleAutoTossAll);
+      document.getElementById("btnResetCoins")?.addEventListener("click", () => {
+        state.castLines = [];
+        renderCastingProgress();
+        showToast("已重置铜钱摇卦台，可重新摇卦");
+      });
+
+      // Number buttons
+      document.getElementById("btnCastNumbers")?.addEventListener("click", () => {
+        const n1 = parseInt(document.getElementById("numInput1")?.value || "1", 10) || 1;
+        const n2 = parseInt(document.getElementById("numInput2")?.value || "1", 10) || 1;
+        const n3 = parseInt(document.getElementById("numInput3")?.value || "1", 10) || 1;
+        handleCastByNumbers(n1, n2, n3);
+      });
+
+      document.getElementById("btnRandomNumbers")?.addEventListener("click", () => {
+        const n1 = randomInt(1, 99);
+        const n2 = randomInt(1, 99);
+        const n3 = randomInt(1, 99);
+        document.getElementById("numInput1").value = String(n1);
+        document.getElementById("numInput2").value = String(n2);
+        document.getElementById("numInput3").value = String(n3);
+        handleCastByNumbers(n1, n2, n3);
+      });
+
+      // Time button
+      document.getElementById("btnCastTime")?.addEventListener("click", handleCastByTime);
+
+      // Manual Bagua picker button
+      document.getElementById("btnCastManual")?.addEventListener("click", () => {
+        const upperBits = document.getElementById("selUpperBagua")?.value || "000";
+        const lowerBits = document.getElementById("selLowerBagua")?.value || "111";
+        const movingIdx = parseInt(document.getElementById("selMovingYao")?.value || "4", 10);
+        const bits6 = lowerBits + upperBits;
+        const lines = [];
+        for (let i = 0; i < 6; i++) {
+          const bit = bits6[i];
+          const moving = i === movingIdx;
+          lines.push({
+            bit,
+            moving,
+            typeLabel: moving ? (bit === "1" ? "老阳 ○" : "老阴 ✕") : (bit === "1" ? "少阳 —" : "少阴 - -")
+          });
+        }
+        const upperName = TRIGRAMS[upperBits]?.name || "";
+        const lowerName = TRIGRAMS[lowerBits]?.name || "";
+        buildReadingFromSixLines(lines, `八卦自选点卦 (上${upperName}下${lowerName})`);
+        showToast("已按所选八卦与动爻排盘！");
+      });
+
+      function downloadStandaloneHtmlApp() {
+        const htmlSource = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([htmlSource], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "周易随身卦_离线App.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("已保存离线 App 单文件 (.html)，无网/免VPN可随时打开！");
+      }
+
+      document.getElementById("btnDownloadStandalone")?.addEventListener("click", downloadStandaloneHtmlApp);
+      document.getElementById("btnQuickDownloadApp")?.addEventListener("click", downloadStandaloneHtmlApp);
+      document.getElementById("btnModalDownloadNow")?.addEventListener("click", downloadStandaloneHtmlApp);
+
+      // Bottom App Dock Navigation
+      document.getElementById("bottomAppDock")?.addEventListener("click", (e) => {
+        const btn = e.target.closest(".dock-item");
+        if (!btn) return;
+        const view = btn.getAttribute("data-view");
+        if (view) switchView(view);
+      });
+
+      // Mobile App Shell vs Desktop Wide View Switcher
+      document.getElementById("shellModeSwitch")?.addEventListener("click", (e) => {
+        const btn = e.target.closest(".mode-switch-btn");
+        if (!btn) return;
+        const shell = btn.getAttribute("data-shell");
+        document.querySelectorAll("#shellModeSwitch .mode-switch-btn").forEach(b => {
+          b.classList.toggle("active", b === btn);
+        });
+        if (shell === "mobile") {
+          document.body.classList.add("mobile-frame-mode");
+          showToast("已切换至手机 App 沉浸视图");
+        } else {
+          document.body.classList.remove("mobile-frame-mode");
+          showToast("已切换至宽屏双栏罗盘视图");
+        }
+      });
+
+      // Sound Toggle
+      document.getElementById("btnToggleSound")?.addEventListener("click", (e) => {
+        soundEnabled = !soundEnabled;
+        e.currentTarget.textContent = soundEnabled ? "🔔 铜钱音效：开启" : "🔕 铜钱音效：静音";
+        if (soundEnabled) playCoinSound(false);
+      });
+
+      // Install App Guide Modal
+      const installBackdrop = document.getElementById("installGuideBackdrop");
+      document.getElementById("btnOpenInstallGuide")?.addEventListener("click", () => {
+        installBackdrop?.classList.add("open");
+      });
+      document.getElementById("btnCloseInstallModal")?.addEventListener("click", () => {
+        installBackdrop?.classList.remove("open");
+      });
+      installBackdrop?.addEventListener("click", (e) => {
+        if (e.target.id === "installGuideBackdrop") {
+          installBackdrop.classList.remove("open");
+        }
+      });
+
+      // Status bar live clock
+      function updateStatusClock() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        const clockEl = document.getElementById("statusBarClock");
+        if (clockEl) clockEl.textContent = `${hh}:${mm}`;
+      }
+      updateStatusClock();
+      setInterval(updateStatusClock, 15000);
+
+      // Device Motion Shake-to-Toss Support for Mobile App users
+      let lastShakeTime = 0;
+      window.addEventListener("devicemotion", (ev) => {
+        if (state.activeView !== "divine" || state.selectedMethod !== "coins") return;
+        const acc = ev.accelerationIncludingGravity;
+        if (!acc) return;
+        const totalAcc = Math.abs(acc.x || 0) + Math.abs(acc.y || 0) + Math.abs(acc.z || 0);
+        const nowMs = Date.now();
+        if (totalAcc > 32 && nowMs - lastShakeTime > 900) {
+          lastShakeTime = nowMs;
+          handleSingleToss();
+        }
+      });
+
+      // Daily Zodiac selector
+      document.getElementById("zodiacSelect")?.addEventListener("change", () => {
+        renderDailyFortuneView();
+      });
+
+      // Dictionary search & trigram filter
+      document.getElementById("dictSearchInput")?.addEventListener("input", (e) => {
+        state.dictSearch = e.target.value || "";
+        renderDictionaryGrid();
+      });
+
+      document.getElementById("baguaFilterBar")?.addEventListener("click", (e) => {
+        const chip = e.target.closest(".bagua-chip");
+        if (!chip) return;
+        state.dictTrigramFilter = chip.getAttribute("data-trigram") || "ALL";
+        document.querySelectorAll("#baguaFilterBar .bagua-chip").forEach(c => {
+          c.classList.toggle("active", c === chip);
+        });
+        renderDictionaryGrid();
+      });
+
+      document.getElementById("hexGrid64")?.addEventListener("click", (e) => {
+        const tile = e.target.closest(".hex-tile");
+        if (!tile) return;
+        openHexModal(tile.getAttribute("data-hexnum"));
+      });
+
+      document.getElementById("hexModalBackdrop")?.addEventListener("click", (e) => {
+        if (e.target.id === "hexModalBackdrop") {
+          e.currentTarget.classList.remove("open");
+        }
+      });
+
+      // History actions
+      document.getElementById("historyListContainer")?.addEventListener("click", (e) => {
+        const loadBtn = e.target.closest(".btn-load-hist");
+        if (loadBtn) {
+          const idx = Number(loadBtn.getAttribute("data-idx"));
+          const item = state.history[idx];
+          if (item) {
+            state.currentResult = item;
+            renderReadingResult(item);
+            switchView("divine");
+            showToast("已载入历史卦象详批");
+          }
+          return;
+        }
+        const delBtn = e.target.closest(".btn-del-hist");
+        if (delBtn) {
+          const idx = Number(delBtn.getAttribute("data-idx"));
+          state.history.splice(idx, 1);
+          saveHistory();
+          renderHistoryList();
+          showToast("已删除该条记录");
+        }
+      });
+
+      document.getElementById("btnExportHistory")?.addEventListener("click", () => {
+        const dataToExport = state.history.length > 0 ? state.history : (state.currentResult ? [state.currentResult] : []);
+        const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `周易卜卦记录_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("已导出断卦记录 JSON 文件！");
+      });
+
+      document.getElementById("btnClearHistory")?.addEventListener("click", () => {
+        state.history = [];
+        saveHistory();
+        renderHistoryList();
+        showToast("已清空本地卜卦记录");
+      });
+
+      // Initialize default reading on startup (so the right panel opens rich and ready)
+      renderCastingProgress();
+      updateLiveTimeBanner();
+      const initialLines = [
+        { bit: "1", moving: false, typeLabel: "少阳 —" },
+        { bit: "1", moving: false, typeLabel: "少阳 —" },
+        { bit: "1", moving: false, typeLabel: "少阳 —" },
+        { bit: "0", moving: false, typeLabel: "少阴 - -" },
+        { bit: "0", moving: true,  typeLabel: "老阴 ✕" },
+        { bit: "0", moving: false, typeLabel: "少阴 - -" }
+      ]; // 地天泰 六五发动 -> 水天需
+      buildReadingFromSixLines(initialLines, "开局祥瑞示例卦（地天泰）");
+    }
+
+    window.addEventListener("DOMContentLoaded", initApp);
+  </script>
+</body>
+</html>
